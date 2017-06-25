@@ -13,6 +13,45 @@ var patientKeys = {
     'Gender': 'gender',
 };
 
+var visitKeys = {
+    'bp': { 'display': 'Blood Pressure' },
+    'hr': { 'display': 'Heart Rate' },
+    'weight': { 'display': 'Weight' },
+    'height': { 'display': 'Height' },
+    'symptoms': { 'display': 'Symptoms' },
+    'diagnosis': { 'display': 'Diagnosis' },
+    'prescriptions': { 'display': 'Prescriptions' },
+    'therapy': { 'display': 'Therapy' },
+    'cost': { 'display': 'Cost'},
+    'next_visit': { 'display': 'Next Visit' },
+};
+
+var renderVisitOverview = function(visitId, visitInfo) {
+    var output = '<div style="border-width: 2px; border-style: solid; border-color: black;">';
+    output += visitInfo.date + '<br/>';
+    output += visitInfo.symptoms;
+    output += '</div>';
+    return output;
+};
+
+var renderPastVisits = function(userId) {
+    firebase.database().ref('visits/' + userId)
+        .once('value', function(data) {
+            var visits = data.val();
+            if (!visits) { return; }
+            var pastVisitsPanel = $('#past_visits');
+            var pastVisitsContents = '<table>\n';
+            for (var key in visits) {
+                var visit = visits[key];
+                pastVisitsContents += '<tr><td>';
+                pastVisitsContents += renderVisitOverview(key, visit);
+                pastVisitsContents += '</td></tr>';
+            }
+            pastVisitsContents += '</table>\n';
+            pastVisitsPanel.append(pastVisitsContents);
+        });
+};
+
 var renderPatientInfo = function(id) {
     var database = firebase.database().ref('patients/' + id);
     database.once('value', function(data) {
@@ -36,9 +75,56 @@ var renderPatientInfo = function(id) {
         }
         content += '</table>\n';
         content += '<button id="edit_profile_button" onclick="toggleEditAndSaveInfo(' + id + ');">Edit</button>';
-        content += '<button onclick="sendToDoctor();">Send to doctor</button>';
+        content += '<button onclick="createNewVisit(' + id + ');">New Visit</button>';
         $('#main').append(content);
     });
+};
+
+var updateVisit = function(userId, visitId) {
+    var info = {};
+    for (var key in visitKeys) {
+        var value = $('#edit_' + key).val();
+        if (value) {
+            info[key] = value;
+        }
+    }
+    firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
+};
+
+var deleteVisit = function(userId, visitId) {
+    firebase.database().ref('visits/' + userId + '/' + visitId + '/')
+        .update({'deleted' : true});
+    $('#new_visit').empty();
+};
+
+var renderNewVisit = function(userId, visitId, dateString) {
+    var visitsPanel = $('#new_visit');
+    visitsPanel.empty();
+    var content = '<div>\n<table>\n';
+    content += '<tr><td>Date</td><td>' + dateString + '</td></tr>\n';
+    for (var key in visitKeys) {
+        var keyInfo = visitKeys[key];
+        content += '<tr><td>';
+        content += keyInfo.display;
+        content += '</td><td>';
+        content += '<input type="text" id="edit_' + key + '">';
+        content += '</td></tr>';
+    }
+    content += '</table>\n';
+    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
+    content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
+    content += '</div>\n';
+    visitsPanel.append(content);
+};
+
+var createNewVisit = function(id) {
+    var dateTime = new Date();
+    var dateString = dateTime.getDate() + '/' + (dateTime.getMonth() + 1)
+        + '/' + dateTime.getFullYear() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds();
+    var newVisitId = firebase.database().ref('visits/' + id).push({
+        date: dateString
+    }).key;
+    renderNewVisit(id, newVisitId, dateString);
 };
 
 var toggleEditAndSaveInfo = function(id) {
