@@ -2,11 +2,7 @@
     <body>
         <div id="main">
         </div>
-        <div id="new_visit">
-        </div>
-        <div id="past_visits" style="left: 500px; top: 50px; position: absolute;">
-        </div>
-        <div id="queuePanel" style="position: absolute; left: 500px; top: 600px;">
+        <div id="queuePanel" style="position: absolute; left: 500px; top: 50px;">
             <div><p>Queue</p></div>
             <div id="queue"/>
         </div>
@@ -25,16 +21,14 @@
         </script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="js/keys.js"></script>
+        <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
          firebase.auth().onAuthStateChanged(function(user) {
              if (user) {
                  // User is signed in.
-                 var idParam = getParameterByName(window.location.href, 'id');
-                 renderPatientInfo(idParam);
-                 renderPastVisits(idParam);
-                 renderQueue();
+                 renderQueue(true);
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -42,8 +36,7 @@
                      var token = result.credential.accessToken;
                      // The signed-in user info.
                      var user = result.user;
-                     var idParam = getParameterByName(window.location.href, 'id');
-                     renderPatientInfo(idParam);
+                     renderQueue();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;
