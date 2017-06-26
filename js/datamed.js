@@ -114,9 +114,12 @@ var renderQueue = function(clickable) {
                 var visit = info.visit;
                 var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
                 if (clickable) {
-                    div.onClick = function() {
-                        displayFullVisit(info);
-                    };
+                    console.log('Setting clickable...');
+                    div.click(function(currentInfo) {
+                        return function() {
+                            displayFullVisit(currentInfo);
+                        }
+                    }(info));
                 }
                 var index = $('<p>', { text: count} );
                 div.append(index);
