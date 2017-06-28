@@ -3,29 +3,6 @@ var renderPage = function() {
     $('#main').show();
 };
 
-var patientKeys = {
-    'First name': 'first_name',
-    'Last name': 'last_name',
-    'Phone number': 'phone',
-    'Date of birth': 'dob',
-    'Address': 'address',
-    'Email': 'email',
-    'Gender': 'gender',
-};
-
-var visitKeys = {
-    'bp': { 'display': 'Blood Pressure' },
-    'hr': { 'display': 'Heart Rate' },
-    'weight': { 'display': 'Weight' },
-    'height': { 'display': 'Height' },
-    'symptoms': { 'display': 'Symptoms' },
-    'diagnosis': { 'display': 'Diagnosis' },
-    'prescriptions': { 'display': 'Prescriptions' },
-    'therapy': { 'display': 'Therapy' },
-    'cost': { 'display': 'Cost'},
-    'next_visit': { 'display': 'Next Visit' },
-};
-
 var renderVisitOverview = function(visitId, visitInfo) {
     var output = '<div style="border-width: 2px; border-style: solid; border-color: black;">';
     output += visitInfo.date + '<br/>';
@@ -52,6 +29,9 @@ var renderPastVisits = function(userId) {
         });
 };
 
+var currentPatient = null;
+var currentVisit = null;
+
 var renderPatientInfo = function(id) {
     var database = firebase.database().ref('patients/' + id);
     database.once('value', function(data) {
@@ -60,11 +40,12 @@ var renderPatientInfo = function(id) {
             $('#main').append('Patient not found');
             return;
         }
+        currentPatient = patient;
         var content = '<table>';
         for (var key in patientKeys) {
-            var dataKey = patientKeys[key];
+            var dataKey = key;
             content += '<tr><td>';
-            content += key;
+            content += patientKeys[key].display;
             content += '</td><td>';
             var value = '';
             if (patient[dataKey]) {
@@ -80,14 +61,15 @@ var renderPatientInfo = function(id) {
     });
 };
 
-var updateVisit = function(userId, visitId) {
-    var info = {};
+var updateVisit = function(userId, visitId, dateString) {
+    var info = { date : dateString };
     for (var key in visitKeys) {
         var value = $('#edit_' + key).val();
         if (value) {
             info[key] = value;
         }
     }
+    currentVisit = info;
     firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
 };
 
@@ -111,19 +93,76 @@ var renderNewVisit = function(userId, visitId, dateString) {
         content += '</td></tr>';
     }
     content += '</table>\n';
-    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
+    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\', \'' + dateString + '\');">Update</button>';
+    content += '<button onclick="queuePatient(\'' + userId + '\',\'' + visitId + '\');">Queue</button>';
     content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
     content += '</div>\n';
     visitsPanel.append(content);
 };
 
+var renderQueue = function(clickable) {
+    var database = firebase.database();
+    database.ref('queue/').orderByChild('time')
+        .once('value', function(data) {
+            var queue = data.val();
+            if (!queue) { return; }
+            var queuePanel = $('#queue');
+            var count = 1;
+            for (var key in queue) {
+                var info = queue[key];
+                var patient = info.patient;
+                var visit = info.visit;
+                var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
+                if (clickable) {
+                    console.log('Setting clickable...');
+                    div.click(function(currentInfo) {
+                        return function() {
+                            displayFullVisit(currentInfo);
+                        }
+                    }(info));
+                }
+                var index = $('<p>', { text: count} );
+                div.append(index);
+                if (patient) {
+                    var patientNameLabel =
+                        $('<p>', { text : patient.first_name + ' ' + patient.last_name });
+                    div.append(patientNameLabel);
+                }
+                if (visit) {
+                    var symptomLabel =
+                        $('<p>', { text : visit.symptoms });
+                    div.append(symptomLabel);
+                }
+                queuePanel.append(div);
+                ++count;
+            }
+        });
+};
+
+var queuePatient = function(userId, visitId) {
+    if (!currentVisit || !currentPatient) {
+        window.alert('Unable to queue empty patient/visit');
+        return;
+    }
+    firebase.database().ref('queue/').push({
+        patientId: userId,
+        visitId: visitId,
+        time: Date.now(),
+        patient: currentPatient,
+        visit: currentVisit,
+    });
+};
+
 var createNewVisit = function(id) {
     var dateTime = new Date();
     var dateString = dateTime.getDate() + '/' + (dateTime.getMonth() + 1)
-        + '/' + dateTime.getFullYear() + ' ' + dateTime.getHours() + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds();
-    var newVisitId = firebase.database().ref('visits/' + id).push({
+        + '/' + dateTime.getFullYear() + ' ' + dateTime.getHours()
+        + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds();
+    var newVisitInfo = {
         date: dateString
-    }).key;
+    };
+    currentVisit = newVisitInfo;
+    var newVisitId = firebase.database().ref('visits/' + id).push(newVisitInfo).key;
     renderNewVisit(id, newVisitId, dateString);
 };
 
@@ -138,7 +177,7 @@ var toggleEditAndSaveInfo = function(id) {
     button.text(changeToEdit ? 'Save' : 'Edit');
     var info = {};
     for (var key in patientKeys) {
-        var dataKey = patientKeys[key];
+        var dataKey = key;
         $('#edit_' + dataKey).prop('disabled', !changeToEdit);
         var value = $('#edit_' + dataKey).val();
         if (value) {
@@ -146,6 +185,7 @@ var toggleEditAndSaveInfo = function(id) {
         }
     }
     if (!changeToEdit) {
+        currentPatient = info;
         updatePatientInfo(id, info);
     }
 };
