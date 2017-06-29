@@ -1,6 +1,4 @@
-
-
-var displayFullVisit = function(info) {
+var displayFullVisit = function(queueKey, info) {
     var mainPanel = $('#main');
     mainPanel.empty();
 
@@ -37,4 +35,20 @@ var displayFullVisit = function(info) {
     }
     mainPanel.append(patientDiv);
     mainPanel.append(visitDiv);
+    var doneButton = $('<button>', { text: 'Finish' });
+    doneButton.click(function() {
+        dequeue(queueKey);
+    });
+    var updateButton = $('<button>', { text: 'Update' });
+    updateButton.click(function() {
+        updateVisit(info.patientId, info.visitId, visit.date);
+    });
+    mainPanel.append(doneButton);
+    mainPanel.append(updateButton);
+};
+
+var dequeue = function(queueKey) {
+    var mainPanel = $('#main');
+    mainPanel.empty();
+    firebase.database().ref('queue/' + queueKey).remove();
 };

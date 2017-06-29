@@ -103,10 +103,11 @@ var renderNewVisit = function(userId, visitId, dateString) {
 var renderQueue = function(clickable) {
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
-        .once('value', function(data) {
+        .on('value', function(data) {
             var queue = data.val();
             if (!queue) { return; }
             var queuePanel = $('#queue');
+            queuePanel.empty();
             var count = 1;
             for (var key in queue) {
                 var info = queue[key];
@@ -115,11 +116,11 @@ var renderQueue = function(clickable) {
                 var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
                 if (clickable) {
                     console.log('Setting clickable...');
-                    div.click(function(currentInfo) {
+                    div.click(function(queueKey, currentInfo) {
                         return function() {
-                            displayFullVisit(currentInfo);
+                            displayFullVisit(queueKey, currentInfo);
                         }
-                    }(info));
+                    }(key, info));
                 }
                 var index = $('<p>', { text: count} );
                 div.append(index);
