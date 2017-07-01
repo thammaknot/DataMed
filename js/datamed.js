@@ -70,8 +70,6 @@ var updateVisit = function(userId, visitId, queueKey) {
         }
     }
     currentVisit = info;
-    console.log('Updating visit:::');
-    console.log(info);
     firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
     if (queueKey) {
         firebase.database().ref('queue/' + queueKey + '/visit').update(info);
