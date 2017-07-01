@@ -9,6 +9,9 @@ var patientKeys = {
 };
 
 var visitKeys = {
+    'date': { 'display': 'Date',
+              'type': 'text',
+              'editable': false},
     'bp_low': { 'display': 'Blood Pressure (low)',
                 'type': 'number' },
     'bp_high': { 'display': 'Blood Pressure (high)',

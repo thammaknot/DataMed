@@ -61,8 +61,8 @@ var renderPatientInfo = function(id) {
     });
 };
 
-var updateVisit = function(userId, visitId, dateString) {
-    var info = { date : dateString };
+var updateVisit = function(userId, visitId, queueKey) {
+    var info = {};
     for (var key in visitKeys) {
         var value = $('#edit_' + key).val();
         if (value) {
@@ -70,7 +70,12 @@ var updateVisit = function(userId, visitId, dateString) {
         }
     }
     currentVisit = info;
+    console.log('Updating visit:::');
+    console.log(info);
     firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
+    if (queueKey) {
+        firebase.database().ref('queue/' + queueKey + '/visit').update(info);
+    }
 };
 
 var deleteVisit = function(userId, visitId) {
@@ -93,7 +98,7 @@ var renderNewVisit = function(userId, visitId, dateString) {
         content += '</td></tr>';
     }
     content += '</table>\n';
-    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\', \'' + dateString + '\');">Update</button>';
+    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
     content += '<button onclick="queuePatient(\'' + userId + '\',\'' + visitId + '\');">Queue</button>';
     content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
     content += '</div>\n';
