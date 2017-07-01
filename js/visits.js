@@ -26,8 +26,7 @@ var displayFullVisit = function(queueKey, info) {
     for (var key in visitKeys) {
         var label = $('<p>', { text: visitKeys[key].display,
                                style: 'display: inline-block; margin-right: 10px;'});
-        var value = $('<p>', { text: visit[key],
-                               style: 'display: inline-block;' });
+        var value = renderVisitValue(key, visitKeys[key], visit[key]);
         var subDiv = $('<div>');
         subDiv.append(label);
         subDiv.append(value);
@@ -46,6 +45,27 @@ var displayFullVisit = function(queueKey, info) {
     mainPanel.append(doneButton);
     mainPanel.append(updateButton);
 };
+
+var renderVisitValue = function(fieldKey, fieldInfo, value) {
+    var type = fieldInfo.type;
+
+    var element;
+    if (type == 'text') {
+        element = $('<textarea>', { id: 'edit_' + fieldKey,
+                                    text: value,
+                                    rows: 5,
+                                    cols: 30});
+    } else if (type == 'number') {
+        element = $('<input>', { id: 'edit_' + fieldKey,
+                                 text: value,
+                                 size: 6 });
+    } else if (type == 'date') {
+        element = $('<input>', { id: 'edit_' + fieldKey });
+        element.datepicker();
+    }
+    return element;
+};
+
 
 var dequeue = function(queueKey) {
     var mainPanel = $('#main');
