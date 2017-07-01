@@ -61,8 +61,8 @@ var renderPatientInfo = function(id) {
     });
 };
 
-var updateVisit = function(userId, visitId, dateString) {
-    var info = { date : dateString };
+var updateVisit = function(userId, visitId, queueKey) {
+    var info = {};
     for (var key in visitKeys) {
         var value = $('#edit_' + key).val();
         if (value) {
@@ -70,7 +70,12 @@ var updateVisit = function(userId, visitId, dateString) {
         }
     }
     currentVisit = info;
+    console.log('Updating visit:::');
+    console.log(info);
     firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
+    if (queueKey) {
+        firebase.database().ref('queue/' + queueKey + '/visit').update(info);
+    }
 };
 
 var deleteVisit = function(userId, visitId) {
@@ -93,7 +98,7 @@ var renderNewVisit = function(userId, visitId, dateString) {
         content += '</td></tr>';
     }
     content += '</table>\n';
-    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\', \'' + dateString + '\');">Update</button>';
+    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
     content += '<button onclick="queuePatient(\'' + userId + '\',\'' + visitId + '\');">Queue</button>';
     content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
     content += '</div>\n';
@@ -103,10 +108,11 @@ var renderNewVisit = function(userId, visitId, dateString) {
 var renderQueue = function(clickable) {
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
-        .once('value', function(data) {
+        .on('value', function(data) {
             var queue = data.val();
             if (!queue) { return; }
             var queuePanel = $('#queue');
+            queuePanel.empty();
             var count = 1;
             for (var key in queue) {
                 var info = queue[key];
@@ -115,11 +121,11 @@ var renderQueue = function(clickable) {
                 var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
                 if (clickable) {
                     console.log('Setting clickable...');
-                    div.click(function(currentInfo) {
+                    div.click(function(queueKey, currentInfo) {
                         return function() {
-                            displayFullVisit(currentInfo);
+                            displayFullVisit(queueKey, currentInfo);
                         }
-                    }(info));
+                    }(key, info));
                 }
                 var index = $('<p>', { text: count} );
                 div.append(index);
