@@ -27,11 +27,11 @@ var visitKeys = {
     'diagnosis': { 'display': 'Diagnosis',
                    'type': 'text' },
     'prescriptions': { 'display': 'Prescriptions',
-                       'type': 'prescription' },
+                       'type': 'prescriptions' },
     'therapy': { 'display': 'Therapy',
                  'type': 'therapy' },
     'cost': { 'display': 'Cost',
-              'type': 'number' },
+              'type': 'cost' },
     'next_visit': { 'display': 'Next Visit',
                     'type': 'date' },
     'remarks' : { 'display': 'Remarks',
@@ -41,6 +41,6 @@ var visitKeys = {
 var prescriptionKeys = {
     'name' : { 'display' : 'Name',
                'type': 'short_text' },
-    'price_per_unit' : { 'display' : 'Price per unit',
-                         'type': 'number' },
+    'unit_price' : { 'display' : 'Unit price',
+                     'type': 'number' },
 };

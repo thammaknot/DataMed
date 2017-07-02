@@ -1,3 +1,16 @@
+var prescriptionList = {};
+
+var loadPrescriptionList = function() {
+    firebase.database().ref('prescriptions/')
+        .on('value', function(data) {
+            var prescriptions = data.val();
+            if (!prescriptions) { return; }
+            prescriptionList = prescriptions;
+            console.log('Prescription: ');
+            console.log(prescriptionList);
+        });
+};
+
 var displayFullVisit = function(queueKey, info) {
     var mainPanel = $('#main');
     mainPanel.empty();
@@ -87,16 +100,124 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
     } else if (type == 'number') {
         element = $('<input>', { id: 'edit_' + fieldKey,
                                  value: value,
-                                 size: 6,
-                                 disabled: !editable });
+                                 disabled: !editable }).attr('size', 6);
     } else if (type == 'date') {
         element = $('<input>', { id: 'edit_' + fieldKey,
                                  disabled: !editable });
         element.datepicker({ dateFormat: 'dd/mm/yy' });
+    } else if (type == 'prescriptions') {
+        element = renderPrescriptionValue(value);
+    } else if (type == 'cost') {
+        element = renderCostValue(value);
     }
     return element;
 };
 
+var renderCostValue = function(value) {
+    var div = $('<div>');
+    var costTextField = $('<input>', { value: value,
+                                       id: 'edit_cost' });
+    var autoCostButton = $('<button>', { text: 'Auto' });
+    autoCostButton.click(function() {
+        console.log('Clicked!!!');
+        var prescriptionPanel = $('#prescription_panel');
+        if (!prescriptionPanel || prescriptionPanel.children().length == 0) {
+            alert('Please enter prescription first!');
+            return;
+        }
+        console.log(prescriptionPanel);
+        var totalCost = 0;
+        $(prescriptionPanel).find('div.prescription_row').each(function() {
+            var unitPrice = $(this).find('p.unit_price_value').text();
+            var quantity = $(this).find('input.quantity_value').val();
+            totalCost += (Number(unitPrice) * Number(quantity));
+        });
+        $('#edit_cost').val(totalCost);
+    });
+    div.append(costTextField);
+    div.append(autoCostButton);
+    return div;
+};
+
+/**
+ * value: {'1': { name: 'med1', quantity: 10, unit_price: 12},
+ *         '2': { name: 'med2', quantity: 20, unit_price: 20}}
+ */
+var renderPrescriptionValue = function(value) {
+    var div = $('<div>', { id: 'prescription_panel'});
+    for (var med in value) {
+        var name = med.name;
+        var unitPrice = med.unit_price;
+        var quantity = med.quantity;
+        var row = renderPrescriptionRow(name, unitPrice, quantity);
+        div.append(row);
+    }
+    var wrapperDiv = $('<div>');
+    var addButton = $('<button>', { text: 'Add' });
+    addButton.click(function() {
+        addNewPrescription();
+    });
+    wrapperDiv.append(div);
+    wrapperDiv.append(addButton);
+    return wrapperDiv;
+};
+
+var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice) {
+    var menu = $('<select>', { style: 'margin-right: 10px; display: inline-block;' });
+    var priceNameLabel = $('<p>', { text: 'Unit price',
+                                    style: 'display: inline-block; margin-right: 10px;'});
+    var priceLabel = $('<p>', { style: 'display: inline-block; margin-right: 10px;',
+                                'class': 'unit_price_value'});
+    var unitPrice = -1;
+    for (var key in prescriptionList) {
+        var curMed = prescriptionList[key];
+        var option = $('<option>').attr('value', curMed.unit_price).text(curMed.name);
+        if (curMed.name === selectedName || (!selectedName && unitPrice == -1)) {
+            option.prop('selected', true);
+            unitPrice = curMed.unit_price;
+        }
+        menu.append(option);
+    }
+    if (storedUnitPrice) {
+        unitPrice = storedUnitPrice;
+    }
+    $(priceLabel).text(unitPrice);
+    var div = $('<div>', { style: 'display: inline-block;'} );
+    menu.on('change', function() {
+        priceLabel.text(this.value);
+    });
+    div.append(menu);
+    div.append(priceNameLabel);
+    div.append(priceLabel);
+    console.log('### Returning div ' );
+    console.log(div);
+    return div;
+};
+
+var renderPrescriptionRow = function(name, unitPrice, quantity) {
+    var row = $('<div>', { 'class': 'prescription_row', style: 'display: inline-block;' });
+    var prescriptionNameAndPriceDiv =
+        renderPrescriptionNameAndPriceMenu(name, unitPrice);
+    var quantityTextField = $('<input>', { value: quantity,
+                                           'class': 'quantity_value',
+                                           style: 'display: inline-block;' }).attr('size', 5);
+    var deleteButton = $('<button>', { text: 'Delete',
+                                       style: 'display: inline-block;' });
+    deleteButton.click(function(rowToDelete) {
+        return function() {
+            rowToDelete.remove();
+        };
+    }(row));
+    row.append(prescriptionNameAndPriceDiv);
+    row.append(quantityTextField);
+    row.append(deleteButton);
+    return row;
+};
+
+var addNewPrescription = function() {
+    var emptyPrescription = renderPrescriptionRow('', null, 0);
+    $('#prescription_panel').append(emptyPrescription);
+};
 
 var dequeue = function(queueKey) {
     var mainPanel = $('#main');

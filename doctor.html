@@ -31,6 +31,7 @@
          firebase.auth().onAuthStateChanged(function(user) {
              if (user) {
                  // User is signed in.
+                 loadPrescriptionList();
                  renderQueue(true);
              } else {
                  // No user is signed in.
@@ -39,6 +40,7 @@
                      var token = result.credential.accessToken;
                      // The signed-in user info.
                      var user = result.user;
+                     loadPrescriptionList();
                      renderQueue(true);
                  }).catch(function(error) {
                      // Handle Errors here.
