@@ -37,3 +37,10 @@ var visitKeys = {
     'remarks' : { 'display': 'Remarks',
                   'type': 'text' },
 };
+
+var prescriptionKeys = {
+    'name' : { 'display' : 'Name',
+               'type': 'short_text' },
+    'price_per_unit' : { 'display' : 'Price per unit',
+                         'type': 'number' },
+};

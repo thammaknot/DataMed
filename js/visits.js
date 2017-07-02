@@ -27,7 +27,7 @@ var displayFullVisit = function(queueKey, info) {
     for (var key in visitKeys) {
         var label = $('<p>', { text: visitKeys[key].display,
                                style: 'display: inline-block; margin-right: 10px;'});
-        var value = renderVisitValue(key, visitKeys[key], visit[key]);
+        var value = renderFieldValue(key, visitKeys[key], visit[key]);
         var subDiv = $('<div>');
         subDiv.append(label);
         subDiv.append(value);
@@ -47,7 +47,21 @@ var displayFullVisit = function(queueKey, info) {
     mainPanel.append(updateButton);
 };
 
-var renderVisitValue = function(fieldKey, fieldInfo, value) {
+var renderField = function(fieldKey, fieldInfo, value) {
+    var outputDiv = $('<div>');
+    outputDiv.append(renderFieldLabel(fieldKey, fieldInfo));
+    console.log('At this point value is ' + value);
+    outputDiv.append(renderFieldValue(fieldKey, fieldInfo, value));
+    return outputDiv;
+};
+
+var renderFieldLabel = function(fieldKey, fieldInfo, value) {
+    var label = $('<p>', { text: fieldInfo.display,
+                           style: 'display: inline-block; margin-right: 10px;' });
+    return label;
+};
+
+var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
     var element;
@@ -55,19 +69,24 @@ var renderVisitValue = function(fieldKey, fieldInfo, value) {
     if (fieldInfo.editable === false) {
         editable = false;
     }
-    if (type == 'text') {
-        if (editable) {
-            element = $('<textarea>', { id: 'edit_' + fieldKey,
-                                        text: value,
-                                        rows: 5,
-                                        cols: 30});
-        } else {
+    if (type == 'text' || type == 'short_text') {
+        if (!editable) {
             element = $('<label>', { id: 'edit_' + fieldKey,
                                      text: value});
+        } else {
+            if (type == 'text') {
+                element = $('<textarea>', { id: 'edit_' + fieldKey,
+                                            text: value,
+                                            rows: 5,
+                                            cols: 30});
+            } else {
+                element = $('<input>', { id: 'edit_' + fieldKey,
+                                         value: value });
+            }
         }
     } else if (type == 'number') {
         element = $('<input>', { id: 'edit_' + fieldKey,
-                                 text: value,
+                                 value: value,
                                  size: 6,
                                  disabled: !editable });
     } else if (type == 'date') {
