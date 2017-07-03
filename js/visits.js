@@ -72,8 +72,6 @@ var loadPrescriptionList = function() {
             var prescriptions = data.val();
             if (!prescriptions) { return; }
             prescriptionList = prescriptions;
-            console.log('Prescription: ');
-            console.log(prescriptionList);
         });
 };
 
@@ -129,7 +127,6 @@ var displayFullVisit = function(queueKey, info) {
 var renderField = function(fieldKey, fieldInfo, value) {
     var outputDiv = $('<div>');
     outputDiv.append(renderFieldLabel(fieldKey, fieldInfo));
-    console.log('At this point value is ' + value);
     outputDiv.append(renderFieldValue(fieldKey, fieldInfo, value));
     return outputDiv;
 };
@@ -172,8 +169,6 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                                  disabled: !editable });
         element.datepicker({ dateFormat: 'dd/mm/yy' });
     } else if (type == 'prescriptions') {
-        console.log('Rendering presssss value:');
-        console.log(value);
         element = renderPrescriptionValue(value);
     } else if (type == 'cost') {
         element = renderCostValue(value);
