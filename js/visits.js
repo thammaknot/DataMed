@@ -14,8 +14,6 @@ var updateVisit = function(userId, visitId, queueKey) {
         }
     }
     currentVisit = info;
-    console.log('!!! Saving...');
-    console.log(info);
     firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
     if (queueKey) {
         firebase.database().ref('queue/' + queueKey + '/visit').update(info);
@@ -65,8 +63,6 @@ var getCurrentPrescription = function() {
             quantity: quantity
         };
     });
-    console.log('### returning pres info:');
-    console.log(prescriptionInfo);
     return prescriptionInfo;
 };
 
@@ -176,6 +172,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                                  disabled: !editable });
         element.datepicker({ dateFormat: 'dd/mm/yy' });
     } else if (type == 'prescriptions') {
+        console.log('Rendering presssss value:');
+        console.log(value);
         element = renderPrescriptionValue(value);
     } else if (type == 'cost') {
         element = renderCostValue(value);
@@ -213,7 +211,8 @@ var renderCostValue = function(value) {
  */
 var renderPrescriptionValue = function(value) {
     var div = $('<div>', { id: 'prescription_panel'});
-    for (var med in value) {
+    for (var key in value) {
+        var med = value[key];
         var name = med.name;
         var unitPrice = med.unit_price;
         var quantity = med.quantity;
