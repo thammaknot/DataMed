@@ -30,7 +30,6 @@ var renderPastVisits = function(userId) {
 };
 
 var currentPatient = null;
-var currentVisit = null;
 
 var renderPatientInfo = function(id) {
     var database = firebase.database().ref('patients/' + id);
@@ -59,48 +58,6 @@ var renderPatientInfo = function(id) {
         content += '<button onclick="createNewVisit(' + id + ');">New Visit</button>';
         $('#main').append(content);
     });
-};
-
-var updateVisit = function(userId, visitId, queueKey) {
-    var info = {};
-    for (var key in visitKeys) {
-        var value = $('#edit_' + key).val();
-        if (value) {
-            info[key] = value;
-        }
-    }
-    currentVisit = info;
-    firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
-    if (queueKey) {
-        firebase.database().ref('queue/' + queueKey + '/visit').update(info);
-    }
-};
-
-var deleteVisit = function(userId, visitId) {
-    firebase.database().ref('visits/' + userId + '/' + visitId + '/')
-        .update({'deleted' : true});
-    $('#new_visit').empty();
-};
-
-var renderNewVisit = function(userId, visitId, dateString) {
-    var visitsPanel = $('#new_visit');
-    visitsPanel.empty();
-    var content = '<div>\n<table>\n';
-    content += '<tr><td>Date</td><td>' + dateString + '</td></tr>\n';
-    for (var key in visitKeys) {
-        var keyInfo = visitKeys[key];
-        content += '<tr><td>';
-        content += keyInfo.display;
-        content += '</td><td>';
-        content += '<input type="text" id="edit_' + key + '">';
-        content += '</td></tr>';
-    }
-    content += '</table>\n';
-    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
-    content += '<button onclick="queuePatient(\'' + userId + '\',\'' + visitId + '\');">Queue</button>';
-    content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
-    content += '</div>\n';
-    visitsPanel.append(content);
 };
 
 var renderQueue = function(clickable) {
