@@ -108,12 +108,8 @@ var loadPrescriptionList = function() {
 
 var displayFullVisit = function(queueKey, info) {
     var mainPanel = $('#main');
-    mainPanel.empty();
-
-    var patientDiv = $('<div>',
-                       { style: 'border-width: 3px;' +
-                         'border-style: solid; border-color: blue;' +
-                         'width: 450px; '});
+    var patientDiv = $('#patient_info_panel');
+    patientDiv.empty();
     var patient = info.patient;
     for (var key in patientKeys) {
         var label = $('<p>', { text: patientKeys[key].display,
@@ -126,11 +122,17 @@ var displayFullVisit = function(queueKey, info) {
         patientDiv.append(subDiv);
     }
 
-    var visitDiv = $('<div>',
-                     { style: 'border-width: 3px;' +
-                       'border-style: solid; border-color: green; margin: 10px;' +
-                       'width: 450px;' });
-    var visit = info.visit;
+    var visitDiv = $('#visit_panel');
+    visitDiv.empty();
+    visitDiv.append(renderVisitDiv(info.visit, queueKey, info));
+};
+
+var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
+    var outputDiv = $('<div>',
+                      { style: 'border-width: 3px;' +
+                        'border-style: solid; border-color: green; margin: 10px;' +
+                        'width: 450px;' });
+    var visit = visitInfo;
     currentVisit = visit;
     for (var key in visitKeys) {
         var label = $('<p>', { text: visitKeys[key].display,
@@ -139,20 +141,23 @@ var displayFullVisit = function(queueKey, info) {
         var subDiv = $('<div>');
         subDiv.append(label);
         subDiv.append(value);
-        visitDiv.append(subDiv);
+        outputDiv.append(subDiv);
     }
-    mainPanel.append(patientDiv);
-    mainPanel.append(visitDiv);
-    var doneButton = $('<button>', { text: 'Finish' });
-    doneButton.click(function() {
-        dequeue(queueKey);
-    });
-    var updateButton = $('<button>', { text: 'Update' });
-    updateButton.click(function() {
-        updateVisit(info.patientId, info.visitId, queueKey);
-    });
-    mainPanel.append(doneButton);
-    mainPanel.append(updateButton);
+    if (queueKey) {
+        var doneButton = $('<button>', { text: 'Finish' });
+        doneButton.click(function() {
+            dequeue(queueKey);
+        });
+        outputDiv.append(doneButton);
+    }
+    if (queueInfo && queueKey) {
+        var updateButton = $('<button>', { text: 'Update' });
+        updateButton.click(function() {
+            updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
+        });
+        outputDiv.append(updateButton);
+    }
+    return outputDiv;
 };
 
 var addNewPrescription = function() {
@@ -164,4 +169,40 @@ var dequeue = function(queueKey) {
     var mainPanel = $('#main');
     mainPanel.empty();
     firebase.database().ref('queue/' + queueKey).remove();
+};
+
+var renderVisitOverview = function(visitId, visitInfo) {
+    var textContent = visitInfo.date + ' ';
+    textContent += visitInfo.symptoms;
+    var output = $('<div>',
+                   { style: 'border-width: 2px; border-style: solid; border-color: black;',
+                     text: textContent });
+    output.click(function(curVisitInfo) {
+        return function() {
+            var visitDiv = renderVisitDiv(curVisitInfo);
+            $('#visit_panel').empty();
+            $('#visit_panel').append(visitDiv);
+        };
+    }(visitInfo));
+    return output;
+};
+
+var renderPastVisits = function(userId) {
+    firebase.database().ref('visits/' + userId)
+        .on('value', function(data) {
+            var visits = data.val();
+            if (!visits) { return; }
+            var pastVisitsPanel = $('#past_visits');
+            pastVisitsPanel.empty();
+            var pastVisitsContents = $('<div>');
+
+            var size = visits.length;
+            var i = 1;
+            for (var key in visits) {
+                var visit = visits[key];
+                pastVisitsContents.append(renderVisitOverview(key, visit));
+                ++i;
+            }
+            pastVisitsPanel.append(pastVisitsContents);
+        });
 };
