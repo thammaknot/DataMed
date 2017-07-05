@@ -13,10 +13,11 @@ var renderVisitOverview = function(visitId, visitInfo) {
 
 var renderPastVisits = function(userId) {
     firebase.database().ref('visits/' + userId)
-        .once('value', function(data) {
+        .on('value', function(data) {
             var visits = data.val();
             if (!visits) { return; }
             var pastVisitsPanel = $('#past_visits');
+            pastVisitsPanel.empty();
             var pastVisitsContents = '<table>\n';
             for (var key in visits) {
                 var visit = visits[key];
@@ -32,6 +33,7 @@ var renderPastVisits = function(userId) {
 var currentPatient = null;
 
 var renderPatientInfo = function(id) {
+    console.log('ID: ' + id);
     var database = firebase.database().ref('patients/' + id);
     database.once('value', function(data) {
         var patient = data.val();
@@ -40,23 +42,28 @@ var renderPatientInfo = function(id) {
             return;
         }
         currentPatient = patient;
-        var content = '<table>';
+        var containerDiv = $('<div>');
         for (var key in patientKeys) {
             var dataKey = key;
-            content += '<tr><td>';
-            content += patientKeys[key].display;
-            content += '</td><td>';
-            var value = '';
-            if (patient[dataKey]) {
-                value = patient[dataKey];
-            }
-            content += '<input id="edit_' + dataKey + '" type="text" value="' + value + '" disabled>';
-            content += '</td></tr>\n';
+            var row = $('<div>', { id: key });
+            row.append(renderField(key, patientKeys[key], patient[key]));
+            containerDiv.append(row);
         }
-        content += '</table>\n';
-        content += '<button id="edit_profile_button" onclick="toggleEditAndSaveInfo(' + id + ');">Edit</button>';
-        content += '<button onclick="createNewVisit(' + id + ');">New Visit</button>';
-        $('#main').append(content);
+        var saveButton = $('<button>', { text: 'Save'});
+        var newVisitButton = $('<button>', { text: 'New Visit' });
+        saveButton.click(function(patientId) {
+            return function() {
+                savePatientInfo(patientId);
+            };
+        }(id));
+        newVisitButton.click(function(patientId) {
+            return function() {
+                createNewVisit(patientId);
+            };
+        }(id));
+        containerDiv.append(saveButton);
+        containerDiv.append(newVisitButton);
+        $('#main').append(containerDiv);
     });
 };
 
@@ -123,39 +130,24 @@ var createNewVisit = function(id) {
         date: dateString
     };
     currentVisit = newVisitInfo;
-    var newVisitId = firebase.database().ref('visits/' + id).push(newVisitInfo).key;
-    renderNewVisit(id, newVisitId, dateString);
+    renderNewVisit(id, dateString);
 };
 
-var toggleEditAndSaveInfo = function(id) {
+var savePatientInfo = function(id) {
     var button = $('#edit_profile_button');
-    var changeToEdit = true;
-    if (button.text() == 'Edit') {
-        changeToEdit = true;
-    } else {
-        changeToEdit = false;
-    }
-    button.text(changeToEdit ? 'Save' : 'Edit');
+    var changeToEdit = false;
     var info = {};
     for (var key in patientKeys) {
         var dataKey = key;
-        $('#edit_' + dataKey).prop('disabled', !changeToEdit);
         var value = $('#edit_' + dataKey).val();
+        print('Saving ' + key);
+        print(value);
         if (value) {
             info[dataKey] = value;
         }
     }
-    if (!changeToEdit) {
-        currentPatient = info;
-        updatePatientInfo(id, info);
-    }
-};
-
-var updatePatientInfo = function(id, info) {
-    var map = {};
-    map['patients/' + id + '/'] = info;
-    console.log(map);
-    firebase.database().ref().update(map);
+    currentPatient = info;
+    firebase.database().ref('patients/' + id).update(info);
 };
 
 var getParameterByName = function(url, name) {

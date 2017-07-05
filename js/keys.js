@@ -1,11 +1,26 @@
 var patientKeys = {
-    'first_name': { 'display' : 'First name' },
-    'last_name': { 'display' : 'Last name' },
-    'phone' : { 'display' : 'Phone number' },
-    'dob' : { 'display' : 'Date of birth' },
-    'address' : { 'display' : 'Address' },
-    'email' : { 'display' : 'Email' },
-    'gender' : { 'display' : 'Gender' },
+    'first_name': { 'display' : 'First name',
+                    'type': 'short_text',
+                    'size': 20 },
+    'last_name': { 'display' : 'Last name',
+                   'type': 'short_text',
+                   'size': 20 },
+    'phone' : { 'display' : 'Phone number',
+                'type': 'phone',
+                'size': 15 },
+    'dob' : { 'display' : 'Date of birth',
+              'type': 'date' },
+    'address' : { 'display' : 'Address',
+                  'type': 'text' },
+    'email' : { 'display' : 'Email',
+                'type': 'email',
+                'size': 20 },
+    'gender' : { 'display' : 'Gender',
+                 'type': 'options',
+                 'options': {
+                     'male': { 'display': 'Male' },
+                     'female': { 'display': 'Female' },
+                 } },
 };
 
 var visitKeys = {
@@ -40,7 +55,8 @@ var visitKeys = {
 
 var prescriptionKeys = {
     'name' : { 'display' : 'Name',
-               'type': 'short_text' },
+               'type': 'short_text',
+               'size': 30 },
     'unit_price' : { 'display' : 'Unit price',
                      'type': 'number' },
 };

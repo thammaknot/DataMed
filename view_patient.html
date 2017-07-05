@@ -23,9 +23,15 @@
          };
          firebase.initializeApp(config);
         </script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="js/keys.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>
+        <script src="js/prescriptions.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
          firebase.auth().onAuthStateChanged(function(user) {
@@ -35,6 +41,7 @@
                  renderPatientInfo(idParam);
                  renderPastVisits(idParam);
                  renderQueue();
+                 loadPrescriptionList();
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -44,6 +51,9 @@
                      var user = result.user;
                      var idParam = getParameterByName(window.location.href, 'id');
                      renderPatientInfo(idParam);
+                     renderPastVisits(idParam);
+                     renderQueue();
+                     loadPrescriptionList();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;
