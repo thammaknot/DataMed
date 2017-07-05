@@ -131,7 +131,7 @@ var displayFullVisit = function(queueKey, info) {
                        'border-style: solid; border-color: green; margin: 10px;' +
                        'width: 450px;' });
     var visit = info.visit;
-    console.log(visit);
+    currentVisit = visit;
     for (var key in visitKeys) {
         var label = $('<p>', { text: visitKeys[key].display,
                                style: 'display: inline-block; margin-right: 10px;'});
