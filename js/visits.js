@@ -2,49 +2,80 @@ var prescriptionList = {};
 var currentVisit = null;
 
 var updateVisit = function(userId, visitId, queueKey) {
-    var info = {};
+    if (!visitId) {
+        visitId = firebase.database().ref('visits/').push().key;
+        currentVisit.id = visitId;
+    }
     for (var key in visitKeys) {
         if (key == 'prescriptions') {
-            info[key] = getCurrentPrescription();
+            currentVisit[key] = getCurrentPrescription();
         } else {
             var value = $('#edit_' + key).val();
             if (value) {
-                info[key] = value;
+                currentVisit[key] = value;
             }
         }
     }
-    currentVisit = info;
-    firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(info);
+    firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(currentVisit);
     if (queueKey) {
-        firebase.database().ref('queue/' + queueKey + '/visit').update(info);
+        firebase.database().ref('queue/' + queueKey + '/visit').update(currentVisit);
     }
 };
 
 var deleteVisit = function(userId, visitId) {
-    firebase.database().ref('visits/' + userId + '/' + visitId + '/')
-        .update({'deleted' : true});
+    if (visitId) {
+        firebase.database().ref('visits/' + userId + '/' + visitId + '/')
+            .update({'deleted' : true});
+    }
     $('#new_visit').empty();
 };
 
-var renderNewVisit = function(userId, visitId, dateString) {
+var renderNewVisit = function(userId, dateString) {
     var visitsPanel = $('#new_visit');
     visitsPanel.empty();
-    var content = '<div>\n<table>\n';
-    content += '<tr><td>Date</td><td>' + dateString + '</td></tr>\n';
+    var containerDiv = $('<div>');
     for (var key in visitKeys) {
-        var keyInfo = visitKeys[key];
-        content += '<tr><td>';
-        content += keyInfo.display;
-        content += '</td><td>';
-        content += '<input type="text" id="edit_' + key + '">';
-        content += '</td></tr>';
+        var row = $('<div>');
+        var value = '';
+        if (key == 'date') {
+            value = dateString;
+        }
+        row.append(renderField(key, visitKeys[key], value));
+        containerDiv.append(row);
     }
-    content += '</table>\n';
-    content += '<button onclick="updateVisit(\'' + userId + '\',\'' + visitId + '\');">Update</button>';
-    content += '<button onclick="queuePatient(\'' + userId + '\',\'' + visitId + '\');">Queue</button>';
-    content += '<button onclick="deleteVisit(\'' + userId + '\',\'' + visitId + '\');">Delete</button>';
-    content += '</div>\n';
-    visitsPanel.append(content);
+
+    var updateButton = $('<button>', { text: 'Update'} );
+    var queueButton = $('<button>', { text: 'Queue'} );
+    var deleteButton = $('<button>', { text: 'Delete'} );
+
+    updateButton.click(function(curUserId) {
+        return function() {
+            updateVisit(curUserId, currentVisit.id);
+        };
+    }(userId));
+
+    queueButton.click(function(curUserId) {
+        return function() {
+            if (!currentVisit.id) {
+                // Need to save it first.
+                updateVisit(curUserId, currentVisit.id);
+            }
+            queuePatient(curUserId, currentVisit.id);
+        };
+    }(userId));
+
+    deleteButton.click(function(curUserId) {
+        return function() {
+            deleteVisit(curUserId, currentVisit.id);
+        };
+    }(userId));
+
+    var buttonRow = $('<div>');
+    buttonRow.append(updateButton);
+    buttonRow.append(queueButton);
+    buttonRow.append(deleteButton);
+    containerDiv.append(buttonRow);
+    visitsPanel.append(containerDiv);
 };
 
 var getCurrentPrescription = function() {

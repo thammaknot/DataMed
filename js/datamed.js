@@ -13,10 +13,11 @@ var renderVisitOverview = function(visitId, visitInfo) {
 
 var renderPastVisits = function(userId) {
     firebase.database().ref('visits/' + userId)
-        .once('value', function(data) {
+        .on('value', function(data) {
             var visits = data.val();
             if (!visits) { return; }
             var pastVisitsPanel = $('#past_visits');
+            pastVisitsPanel.empty();
             var pastVisitsContents = '<table>\n';
             for (var key in visits) {
                 var visit = visits[key];
@@ -129,8 +130,7 @@ var createNewVisit = function(id) {
         date: dateString
     };
     currentVisit = newVisitInfo;
-    var newVisitId = firebase.database().ref('visits/' + id).push(newVisitInfo).key;
-    renderNewVisit(id, newVisitId, dateString);
+    renderNewVisit(id, dateString);
 };
 
 var savePatientInfo = function(id) {
