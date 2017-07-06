@@ -3,33 +3,6 @@ var renderPage = function() {
     $('#main').show();
 };
 
-var renderVisitOverview = function(visitId, visitInfo) {
-    var output = '<div style="border-width: 2px; border-style: solid; border-color: black;">';
-    output += visitInfo.date + '<br/>';
-    output += visitInfo.symptoms;
-    output += '</div>';
-    return output;
-};
-
-var renderPastVisits = function(userId) {
-    firebase.database().ref('visits/' + userId)
-        .on('value', function(data) {
-            var visits = data.val();
-            if (!visits) { return; }
-            var pastVisitsPanel = $('#past_visits');
-            pastVisitsPanel.empty();
-            var pastVisitsContents = '<table>\n';
-            for (var key in visits) {
-                var visit = visits[key];
-                pastVisitsContents += '<tr><td>';
-                pastVisitsContents += renderVisitOverview(key, visit);
-                pastVisitsContents += '</td></tr>';
-            }
-            pastVisitsContents += '</table>\n';
-            pastVisitsPanel.append(pastVisitsContents);
-        });
-};
-
 var currentPatient = null;
 
 var renderPatientInfo = function(id) {
@@ -86,6 +59,7 @@ var renderQueue = function(clickable) {
                     div.click(function(queueKey, currentInfo) {
                         return function() {
                             displayFullVisit(queueKey, currentInfo);
+                            renderPastVisits(currentInfo.patientId);
                         }
                     }(key, info));
                 }
