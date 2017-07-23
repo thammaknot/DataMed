@@ -171,13 +171,13 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
         });
         body.append(updateButton);
-    }
-    if (queueKey) {
+
         var doneButton = $('<button>', { class: 'btn btn-success' });
         var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-check' });
         doneButton.append(doneIconSpan);
         doneButton.append(' Finish');
         doneButton.click(function() {
+            updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
             dequeue(queueKey);
             addToPostQueue(queueKey, queueInfo);
             $('#visit_panel').empty();

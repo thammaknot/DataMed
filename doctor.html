@@ -19,6 +19,7 @@
                     <ul class="nav nav-tabs">
                         <li><a data-toggle="tab" href="#visits">Past Visits</a></li>
                         <li class="active"><a data-toggle="tab" href="#queuePanel">Queue</a></li>
+                        <li><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="visits" class="tab-pane fade">
@@ -28,9 +29,15 @@
                             <div id="past_visits">
                             </div>
                         </div>
+
+                        <div id="treatmentQueuePanel" class="tab-pane fade">
+                            <div><h2>Treatment Queue</h2></div>
+                            <div id="treatment_queue"></div>
+                        </div>
+
                         <div id="queuePanel" class="tab-pane fade in active">
                             <div><h2>Queue</h2></div>
-                            <div id="queue"/>
+                            <div id="queue"></div>
                         </div>
                     </div>
                 </div>
@@ -59,6 +66,7 @@
         <script src="js/common.js"></script>
         <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>
+        <script src="js/cashier.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
          firebase.auth().onAuthStateChanged(function(user) {
@@ -66,6 +74,7 @@
                  // User is signed in.
                  loadPrescriptionList();
                  renderQueue(true);
+                 renderTreatmentQueue();
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -75,6 +84,7 @@
                      var user = result.user;
                      loadPrescriptionList();
                      renderQueue(true);
+                     renderTreatmentQueue();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;
