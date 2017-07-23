@@ -1,4 +1,5 @@
 var prescriptionList = {};
+var treatmentList = {};
 var currentVisit = null;
 
 var updateVisit = function(userId, visitId, queueKey) {
@@ -7,8 +8,9 @@ var updateVisit = function(userId, visitId, queueKey) {
         currentVisit.id = visitId;
     }
     for (var key in visitKeys) {
-        if (key == 'prescriptions') {
-            currentVisit[key] = getCurrentPrescription();
+        if (key == 'prescriptions' || key == 'treatments') {
+            var prefix = (key == 'prescriptions' ? 'prescription' : 'treatment');
+            currentVisit[key] = getCurrentPrescriptionOrTreatment(prefix);
         } else {
             var value = $('#edit_' + key).val();
             if (value) {
@@ -87,13 +89,13 @@ var renderNewVisit = function(userId, dateString) {
     visitsPanel.append(containerDiv);
 };
 
-var getCurrentPrescription = function() {
+var getCurrentPrescriptionOrTreatment = function(prefix) {
     var prescriptionInfo = {};
-    var prescriptionPanel = $('#prescription_panel');
+    var prescriptionPanel = $('#' + prefix + '_panel');
     if (!prescriptionPanel || prescriptionPanel.children().length == 0) {
         return prescriptionInfo;
     }
-    $(prescriptionPanel).find('div.prescription_row').each(function() {
+    $(prescriptionPanel).find('div.' + prefix + '_row').each(function() {
         var unitPrice = $(this).find('p.unit_price_value').text();
         var quantity = $(this).find('input.quantity_value').val();
         var medName = $(this).find('select option:selected').text();
@@ -112,6 +114,12 @@ var loadPrescriptionList = function() {
             var prescriptions = data.val();
             if (!prescriptions) { return; }
             prescriptionList = prescriptions;
+        });
+    firebase.database().ref('treatments/')
+        .on('value', function(data) {
+            var treatments = data.val();
+            if (!treatments) { return; }
+            treatmentList = treatments;
         });
 };
 
@@ -171,6 +179,8 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
         doneButton.append(' Finish');
         doneButton.click(function() {
             dequeue(queueKey);
+            addToPostQueue(queueKey, queueInfo);
+            $('#visit_panel').empty();
         });
         body.append(doneButton);
     }
@@ -180,6 +190,15 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
 var addNewPrescription = function() {
     var emptyPrescription = renderPrescriptionRow('', null, 0);
     $('#prescription_panel').append(emptyPrescription);
+};
+
+var addNewTreatment = function() {
+    var emptyTreatment = renderTreatmentRow('', null, 0);
+    $('#treatment_panel').append(emptyTreatment);
+};
+
+var addToPostQueue = function(queueKey, queueInfo) {
+    firebase.database().ref('treatment-queue/' + queueKey).update(queueInfo);
 };
 
 var dequeue = function(queueKey) {

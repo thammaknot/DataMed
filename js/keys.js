@@ -43,8 +43,8 @@ var visitKeys = {
                    'type': 'text' },
     'prescriptions': { 'display': 'Prescriptions',
                        'type': 'prescriptions' },
-    'therapy': { 'display': 'Therapy',
-                 'type': 'therapy' },
+    'treatments': { 'display': 'Treatments',
+                 'type': 'treatments' },
     'cost': { 'display': 'Cost',
               'type': 'cost' },
     'next_visit': { 'display': 'Next Visit',
@@ -54,6 +54,14 @@ var visitKeys = {
 };
 
 var prescriptionKeys = {
+    'name' : { 'display' : 'Name',
+               'type': 'short_text',
+               'size': 30 },
+    'unit_price' : { 'display' : 'Unit price',
+                     'type': 'number' },
+};
+
+var treatmentKeys = {
     'name' : { 'display' : 'Name',
                'type': 'short_text',
                'size': 30 },
