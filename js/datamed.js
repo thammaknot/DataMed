@@ -137,8 +137,8 @@ var getParameterByName = function(url, name) {
 var renderResults = function(results) {
     var resultPanel = $('#result_panel');
     resultPanel.empty();
-    var content = '<table>'
-    content += '<tr><td>No.</td><td>First name</td><td>Last name</td><td>Phone</td></tr>\n';
+    var content = '<table class="table">'
+    content += '<thead><tr><th>No.</th><th>First name</th><th>Last name</th><th>Phone</th></tr></thead>\n';
     var i = 1;
     for (var id in results) {
         var patient = results[id];
@@ -147,7 +147,7 @@ var renderResults = function(results) {
         content += '<td>' + patient['first_name'] + '</td>';
         content += '<td>' + patient['last_name'] + '</td>';
         content += '<td>' + patient['phone'] + '</td>';
-        content += '<td><button onclick="location.href=\'view_patient.html?id=' + id + '\';">View</button></td>';
+        content += '<td><button class="btn btn-info" onclick="location.href=\'view_patient.html?id=' + id + '\';">View</button></td>';
         content += '</tr>\n';
         ++i;
     }

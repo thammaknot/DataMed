@@ -3,21 +3,23 @@ var print = function(s) {
 };
 
 var renderField = function(fieldKey, fieldInfo, value) {
-    var outputDiv = $('<div>');
+    var outputDiv = $('<div>', { class: 'form-group' });
     outputDiv.append(renderFieldLabel(fieldKey, fieldInfo));
     outputDiv.append(renderFieldValue(fieldKey, fieldInfo, value));
     return outputDiv;
 };
 
 var renderFieldLabel = function(fieldKey, fieldInfo, value) {
-    var label = $('<p>', { text: fieldInfo.display,
-                           style: 'display: inline-block; margin-right: 10px;' });
-    return label;
+    var titleDiv = $('<div>', { class: 'control-label col-sm-2' });
+    var h3 = $('<h3>', { text: fieldInfo.display });
+    titleDiv.append(h3);
+    return titleDiv;
 };
 
 var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
+    var wrapperDiv = $('<div>', { class: 'col-sm-5'});
     var element;
     var elementId = 'edit_' + fieldKey;
     var editable = true;
@@ -38,16 +40,19 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
             } else {
                 var size = fieldInfo.size;
                 element = $('<input>', { id: elementId,
+                                         class: 'form-control',
                                          value: value }).attr('size', size);
             }
         }
     } else if (type == 'number') {
         element = $('<input>', { id: elementId,
                                  value: value,
+                                 class: 'form-control',
                                  disabled: !editable }).attr('size', 6);
     } else if (type == 'date') {
         element = $('<input>', { id: elementId,
                                  value: value,
+                                 class: 'form-control',
                                  disabled: !editable });
         element.datepicker({ dateFormat: 'dd/mm/yy' });
     } else if (type == 'prescriptions') {
@@ -55,7 +60,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
     } else if (type == 'cost') {
         element = renderCostValue(value);
     } else if (type == 'options') {
-        element = $('<select>', { id: elementId });
+        element = $('<select>', { id: elementId,
+                                  class: 'form-control' });
         for (var option in fieldInfo.options) {
             var optionElement = $('<option>')
                 .attr('value',
@@ -66,7 +72,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
             element.append(optionElement);
         }
     }
-    return element;
+    wrapperDiv.append(element);
+    return wrapperDiv;
 };
 
 var getFieldValue = function(element) {
@@ -155,8 +162,6 @@ var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice)
     div.append(menu);
     div.append(priceNameLabel);
     div.append(priceLabel);
-    console.log('### Returning div ' );
-    console.log(div);
     return div;
 };
 
