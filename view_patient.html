@@ -15,14 +15,22 @@
                     </div>
                 </div>
                 <div class="col-md-5">
-                    <div id="past_visits_header">
-                        <h2>Past Visits</h2>
-                    </div>
-                    <div id="past_visits"> <!-- style="position: absolute; left: 500px; top: 50px;"-->
-                    </div>
-                    <div id="queuePanel"> <!-- style="position: absolute; left: 800px; top: 50px;"-->
-                        <div><h2>Queue</h2></div>
-                        <div id="queue"/>
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#visits">Past Visits</a></li>
+                        <li><a data-toggle="tab" href="#queuePanel">Queue</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="visits" class="tab-pane fade in active">
+                            <div id="past_visits_header">
+                                <h2>Past Visits</h2>
+                            </div>
+                            <div id="past_visits">
+                            </div>
+                        </div>
+                        <div id="queuePanel" class="tab-pane fade">
+                            <div><h2>Queue</h2></div>
+                            <div id="queue"/>
+                        </div>
                     </div>
                 </div>
             </div>
