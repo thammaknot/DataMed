@@ -22,8 +22,8 @@ var renderPatientInfo = function(id) {
             row.append(renderField(key, patientKeys[key], patient[key]));
             containerDiv.append(row);
         }
-        var saveButton = $('<button>', { text: 'Save'});
-        var newVisitButton = $('<button>', { text: 'New Visit' });
+        var saveButton = $('<button>', { class: 'btn btn-primary', text: 'Save'});
+        var newVisitButton = $('<button>', { class: 'btn btn-danger', text: 'New Visit' });
         saveButton.click(function(patientId) {
             return function() {
                 savePatientInfo(patientId);
@@ -41,6 +41,7 @@ var renderPatientInfo = function(id) {
 };
 
 var renderQueue = function(clickable) {
+    return;
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
         .on('value', function(data) {

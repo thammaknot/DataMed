@@ -188,6 +188,7 @@ var renderVisitOverview = function(visitId, visitInfo) {
 };
 
 var renderPastVisits = function(userId) {
+    return;
     firebase.database().ref('visits/' + userId)
         .on('value', function(data) {
             var visits = data.val();

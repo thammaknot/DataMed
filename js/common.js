@@ -3,14 +3,14 @@ var print = function(s) {
 };
 
 var renderField = function(fieldKey, fieldInfo, value) {
-    var outputDiv = $('<div>', { class: 'form-group' });
+    var outputDiv = $('<div>', { class: 'form-group row' });
     outputDiv.append(renderFieldLabel(fieldKey, fieldInfo));
     outputDiv.append(renderFieldValue(fieldKey, fieldInfo, value));
     return outputDiv;
 };
 
 var renderFieldLabel = function(fieldKey, fieldInfo, value) {
-    var titleDiv = $('<div>', { class: 'control-label col-sm-2' });
+    var titleDiv = $('<div>');
     var h3 = $('<h3>', { text: fieldInfo.display });
     titleDiv.append(h3);
     return titleDiv;
@@ -19,7 +19,7 @@ var renderFieldLabel = function(fieldKey, fieldInfo, value) {
 var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
-    var wrapperDiv = $('<div>', { class: 'col-sm-5'});
+    var wrapperDiv = $('<div>', {class: 'col-sm-5'});
     var element;
     var elementId = 'edit_' + fieldKey;
     var editable = true;
@@ -35,6 +35,7 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
             if (type == 'text') {
                 element = $('<textarea>', { id: elementId,
                                             text: value,
+                                            class: 'form-control',
                                             rows: 5,
                                             cols: 30});
             } else {
@@ -54,7 +55,13 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                                  value: value,
                                  class: 'form-control',
                                  disabled: !editable });
-        element.datepicker({ dateFormat: 'dd/mm/yy' });
+        element.datepicker({ dateFormat: 'dd/mm/yy',
+                             changeYear: true,
+                             showButtonPanel: true,
+                             changeMonth: true,
+                             minDate: null,
+                             maxDate: '+0d',
+                             yearRange: '-100:+0' });
     } else if (type == 'prescriptions') {
         element = renderPrescriptionValue(value);
     } else if (type == 'cost') {
