@@ -22,7 +22,7 @@ var renderPatientInfo = function(id) {
             row.append(renderField(key, patientKeys[key], patient[key]));
             containerDiv.append(row);
         }
-        var saveButton = $('<button>', { class: 'btn btn-primary', text: 'Save'});
+        var saveButton = $('<button>', { icons: { primary: 'ui-icon-circle-close' }, class: 'btn btn-primary', text: 'Save'});
         var newVisitButton = $('<button>', { class: 'btn btn-danger', text: 'New Visit' });
         saveButton.click(function(patientId) {
             return function() {
