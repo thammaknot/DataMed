@@ -138,7 +138,7 @@ var renderResults = function(results) {
     var resultPanel = $('#result_panel');
     resultPanel.empty();
     var content = '<table class="table">'
-    content += '<thead><tr><td>No.</td><td>First name</td><td>Last name</td><td>Phone</td></tr></thead>\n';
+    content += '<thead><tr><th>No.</th><th>First name</th><th>Last name</th><th>Phone</th></tr></thead>\n';
     var i = 1;
     for (var id in results) {
         var patient = results[id];
