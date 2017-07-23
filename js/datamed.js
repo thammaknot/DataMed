@@ -62,7 +62,6 @@ var renderQueue = function(clickable) {
                 var info = queue[key];
                 var patient = info.patient;
                 var visit = info.visit;
-                // var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
                 var div = $('<div>', { class: 'panel panel-primary' });
                 if (clickable) {
                     console.log('Setting clickable...');
