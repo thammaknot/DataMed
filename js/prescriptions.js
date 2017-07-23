@@ -4,28 +4,32 @@ var renderPrescriptions = function() {
             var prescriptions = data.val();
             if (!prescriptions) { return; }
             var prescriptionPanel = $('#prescription_list');
+            var outerForm = $('<form>', { class: 'form-horizontal'});
             for (var key in prescriptions) {
                 var info = prescriptions[key];
                 var row = $('<div>', { id: key,
                                        style: 'border-style: solid; '
                                        + 'border-width: 2px; border-color: grey;' });
-                console.log(info);
                 for (var fieldKey in prescriptionKeys) {
-                    console.log('FKey: ' + fieldKey + ' | ' + info[fieldKey]);
                     var field = renderField(fieldKey, prescriptionKeys[fieldKey], info[fieldKey]);
                     row.append(field);
                 }
-                var deleteButton = $('<button>', { text: 'Delete'});
+                var deleteButton = $('<button>', { text: 'Delete',
+                                                   class: 'btn btn-danger'});
                 row.append(deleteButton);
-                prescriptionPanel.append(row);
+                // prescriptionPanel.append(row);
+                outerForm.append(row);
             }
+            prescriptionPanel.append(outerForm);
         });
     var saveButton = $('<button>', { text: 'Save',
+                                     class: 'btn btn-success',
                                      id: 'save_prescription_button'});
     saveButton.click(function() {
         savePrescriptions();
     });
     var newPrescriptionButton = $('<button>', { text: 'New',
+                                                class: 'btn btn-primary',
                                                 id: 'new_prescription_button'});
     newPrescriptionButton.click(function() {
         newPrescription();
