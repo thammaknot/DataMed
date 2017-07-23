@@ -11,8 +11,8 @@ var renderField = function(fieldKey, fieldInfo, value) {
 
 var renderFieldLabel = function(fieldKey, fieldInfo, value) {
     var titleDiv = $('<div>');
-    var h3 = $('<h3>', { text: fieldInfo.display });
-    titleDiv.append(h3);
+    var titleText = $('<h5>', { text: fieldInfo.display });
+    titleDiv.append(titleText);
     return titleDiv;
 };
 

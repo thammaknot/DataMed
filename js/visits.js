@@ -119,17 +119,18 @@ var displayFullVisit = function(queueKey, info) {
     var mainPanel = $('#main');
     var patientDiv = $('#patient_info_panel');
     patientDiv.empty();
+    var patientInfoTable = $('<table>', { class: 'table table-user-information' });
     var patient = info.patient;
     for (var key in patientKeys) {
-        var label = $('<p>', { text: patientKeys[key].display,
-                               style: 'display: inline-block; margin-right: 10px;'});
-        var value = $('<p>', { text: patient[key],
-                               style: 'display: inline-block' });
-        var subDiv = $('<div>');
+        var label = $('<td>', { text: patientKeys[key].display });
+        var value = $('<td>', { text: patient[key] });
+        var subDiv = $('<tr>', { class: 'row' });
         subDiv.append(label);
         subDiv.append(value);
-        patientDiv.append(subDiv);
+        // patientDiv.append(subDiv);
+        patientInfoTable.append(subDiv);
     }
+    patientDiv.append(patientInfoTable);
 
     var visitDiv = $('#visit_panel');
     visitDiv.empty();
@@ -138,33 +139,40 @@ var displayFullVisit = function(queueKey, info) {
 
 var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
     var outputDiv = $('<div>',
-                      { style: 'border-width: 3px;' +
-                        'border-style: solid; border-color: green; margin: 10px;' +
-                        'width: 450px;' });
+                      { class: 'panel panel-info' });
+    var header = $('<div>', { class: 'panel-heading' });
+    var headerText = $('<h4>').text('Visit Info');
+    header.append(headerText);
+    outputDiv.append(header);
+    var body = $('<div>', { class: 'panel-body' });
+    outputDiv.append(body);
     var visit = visitInfo;
     currentVisit = visit;
     for (var key in visitKeys) {
-        var label = $('<p>', { text: visitKeys[key].display,
-                               style: 'display: inline-block; margin-right: 10px;'});
-        var value = renderFieldValue(key, visitKeys[key], visit[key]);
-        var subDiv = $('<div>');
-        subDiv.append(label);
-        subDiv.append(value);
-        outputDiv.append(subDiv);
-    }
-    if (queueKey) {
-        var doneButton = $('<button>', { text: 'Finish' });
-        doneButton.click(function() {
-            dequeue(queueKey);
-        });
-        outputDiv.append(doneButton);
+        var row = $('<div>');
+        var value = '';
+        row.append(renderField(key, visitKeys[key], visit[key]));
+        body.append(row);
     }
     if (queueInfo && queueKey) {
-        var updateButton = $('<button>', { text: 'Update' });
+        var updateButton = $('<button>', { class: 'btn btn-primary' });
+        var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+        updateButton.append(updateIconSpan);
+        updateButton.append(' Save');
         updateButton.click(function() {
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
         });
-        outputDiv.append(updateButton);
+        body.append(updateButton);
+    }
+    if (queueKey) {
+        var doneButton = $('<button>', { class: 'btn btn-success' });
+        var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-check' });
+        doneButton.append(doneIconSpan);
+        doneButton.append(' Finish');
+        doneButton.click(function() {
+            dequeue(queueKey);
+        });
+        body.append(doneButton);
     }
     return outputDiv;
 };
