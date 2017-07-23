@@ -44,9 +44,18 @@ var renderNewVisit = function(userId, dateString) {
         containerDiv.append(row);
     }
 
-    var updateButton = $('<button>', { text: 'Update'} );
-    var queueButton = $('<button>', { text: 'Queue'} );
-    var deleteButton = $('<button>', { text: 'Delete'} );
+    var updateButton = $('<button>', { class: 'btn btn-info', type: 'button' });
+    var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+    updateButton.append(updateIconSpan);
+    updateButton.append(' Save');
+    var queueButton = $('<button>', { class: 'btn btn-primary', type: 'button' });
+    var queueIconSpan = $('<span>', { class: 'glyphicon glyphicon-th-list' });
+    queueButton.append(queueIconSpan);
+    queueButton.append(' Queue');
+    var deleteButton = $('<button>', { class: 'btn btn-danger', type: 'button' });
+    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
+    deleteButton.append(deleteIconSpan);
+    deleteButton.append(' Delete');
 
     updateButton.click(function(curUserId) {
         return function() {
