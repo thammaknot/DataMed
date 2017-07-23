@@ -22,8 +22,14 @@ var renderPatientInfo = function(id) {
             row.append(renderField(key, patientKeys[key], patient[key]));
             containerDiv.append(row);
         }
-        var saveButton = $('<button>', { icons: { primary: 'ui-icon-circle-close' }, class: 'btn btn-primary', text: 'Save'});
-        var newVisitButton = $('<button>', { class: 'btn btn-danger', text: 'New Visit' });
+        var saveButton = $('<button>', { type: 'button', class: 'btn btn-primary'});
+        var saveIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+        saveButton.append(saveIconSpan);
+        saveButton.append(' Save');
+        var newVisitButton = $('<button>', { type: 'button', class: 'btn btn-danger'});
+        var newVisitIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
+        newVisitButton.append(newVisitIconSpan);
+        newVisitButton.append(' New visit');
         saveButton.click(function(patientId) {
             return function() {
                 savePatientInfo(patientId);
@@ -34,8 +40,10 @@ var renderPatientInfo = function(id) {
                 createNewVisit(patientId);
             };
         }(id));
-        containerDiv.append(saveButton);
-        containerDiv.append(newVisitButton);
+        var buttonDiv = $('<div>', {class: 'form-group'});
+        buttonDiv.append(saveButton);
+        buttonDiv.append(newVisitButton);
+        containerDiv.append(buttonDiv);
         $('#main').append(containerDiv);
     });
 };
