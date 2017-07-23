@@ -19,7 +19,7 @@ var renderFieldLabel = function(fieldKey, fieldInfo, value) {
 var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
-    var wrapperDiv = $('<div>', {class: 'col-sm-5'});
+    var wrapperDiv = $('<div>', {class: 'col-md-6'});
     var element;
     var elementId = 'edit_' + fieldKey;
     var editable = true;

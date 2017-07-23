@@ -49,10 +49,10 @@ var renderPatientInfo = function(id) {
 };
 
 var renderQueue = function(clickable) {
-    return;
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
         .on('value', function(data) {
+            print('Rendering queue');
             var queue = data.val();
             if (!queue) { return; }
             var queuePanel = $('#queue');
@@ -62,7 +62,8 @@ var renderQueue = function(clickable) {
                 var info = queue[key];
                 var patient = info.patient;
                 var visit = info.visit;
-                var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
+                // var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
+                var div = $('<div>', { class: 'panel panel-primary' });
                 if (clickable) {
                     console.log('Setting clickable...');
                     div.click(function(queueKey, currentInfo) {
@@ -72,18 +73,16 @@ var renderQueue = function(clickable) {
                         }
                     }(key, info));
                 }
-                var index = $('<p>', { text: count} );
-                div.append(index);
-                if (patient) {
-                    var patientNameLabel =
-                        $('<p>', { text : patient.first_name + ' ' + patient.last_name });
-                    div.append(patientNameLabel);
-                }
+                var header = $('<div>', { class: 'panel-heading',
+                                          text: count + '. ' + patient.first_name
+                                          + ' ' + patient.last_name });
+                div.append(header);
+                var bodyText = 'unknown';
                 if (visit) {
-                    var symptomLabel =
-                        $('<p>', { text : visit.symptoms });
-                    div.append(symptomLabel);
+                    bodyText = visit.symptoms;
                 }
+                var body = $('<div>', { class: 'panel-body', text: bodyText });
+                div.append(body);
                 queuePanel.append(div);
                 ++count;
             }

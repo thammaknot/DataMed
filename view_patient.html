@@ -7,15 +7,24 @@
     </head>
     <body>
         <div class="container">
-            <div id="main">
-            </div>
-            <div id="new_visit">
-            </div>
-            <div id="past_visits" style="position: absolute; left: 500px; top: 50px;">
-            </div>
-            <div id="queuePanel" style="position: absolute; left: 800px; top: 50px;">
-                <div><p>Queue</p></div>
-                <div id="queue"/>
+            <div class="row">
+                <div class="col-md-7">
+                    <div id="main">
+                    </div>
+                    <div id="new_visit">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div id="past_visits_header">
+                        <h2>Past Visits</h2>
+                    </div>
+                    <div id="past_visits"> <!-- style="position: absolute; left: 500px; top: 50px;"-->
+                    </div>
+                    <div id="queuePanel"> <!-- style="position: absolute; left: 800px; top: 50px;"-->
+                        <div><h2>Queue</h2></div>
+                        <div id="queue"/>
+                    </div>
+                </div>
             </div>
         </div>
         <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>

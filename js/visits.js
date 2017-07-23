@@ -174,9 +174,11 @@ var dequeue = function(queueKey) {
 var renderVisitOverview = function(visitId, visitInfo) {
     var textContent = visitInfo.date + ' ';
     textContent += visitInfo.symptoms;
-    var output = $('<div>',
-                   { style: 'border-width: 2px; border-style: solid; border-color: black;',
-                     text: textContent });
+    var output = $('<div>', { class: 'panel panel-info'});
+    var header = $('<div>', {class: 'panel-heading', text: visitInfo.date});
+    var body = $('<div>', {class: 'panel-body', text: visitInfo.symptoms});
+    output.append(header);
+    output.append(body);
     output.click(function(curVisitInfo) {
         return function() {
             var visitDiv = renderVisitDiv(curVisitInfo);
@@ -188,14 +190,13 @@ var renderVisitOverview = function(visitId, visitInfo) {
 };
 
 var renderPastVisits = function(userId) {
-    return;
     firebase.database().ref('visits/' + userId)
         .on('value', function(data) {
             var visits = data.val();
             if (!visits) { return; }
             var pastVisitsPanel = $('#past_visits');
             pastVisitsPanel.empty();
-            var pastVisitsContents = $('<div>');
+            var pastVisitsContents = $('<div>', {class: 'panel-group'});
 
             var size = visits.length;
             var i = 1;
