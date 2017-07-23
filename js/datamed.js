@@ -22,8 +22,14 @@ var renderPatientInfo = function(id) {
             row.append(renderField(key, patientKeys[key], patient[key]));
             containerDiv.append(row);
         }
-        var saveButton = $('<button>', { text: 'Save'});
-        var newVisitButton = $('<button>', { text: 'New Visit' });
+        var saveButton = $('<button>', { type: 'button', class: 'btn btn-primary'});
+        var saveIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+        saveButton.append(saveIconSpan);
+        saveButton.append(' Save');
+        var newVisitButton = $('<button>', { type: 'button', class: 'btn btn-danger'});
+        var newVisitIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
+        newVisitButton.append(newVisitIconSpan);
+        newVisitButton.append(' New visit');
         saveButton.click(function(patientId) {
             return function() {
                 savePatientInfo(patientId);
@@ -34,8 +40,10 @@ var renderPatientInfo = function(id) {
                 createNewVisit(patientId);
             };
         }(id));
-        containerDiv.append(saveButton);
-        containerDiv.append(newVisitButton);
+        var buttonDiv = $('<div>', {class: 'form-group'});
+        buttonDiv.append(saveButton);
+        buttonDiv.append(newVisitButton);
+        containerDiv.append(buttonDiv);
         $('#main').append(containerDiv);
     });
 };
@@ -44,6 +52,7 @@ var renderQueue = function(clickable) {
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
         .on('value', function(data) {
+            print('Rendering queue');
             var queue = data.val();
             if (!queue) { return; }
             var queuePanel = $('#queue');
@@ -53,7 +62,8 @@ var renderQueue = function(clickable) {
                 var info = queue[key];
                 var patient = info.patient;
                 var visit = info.visit;
-                var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
+                // var div = $('<div>', { style: 'border-width: 2px; border-style: solid; border-color: grey;' });
+                var div = $('<div>', { class: 'panel panel-primary' });
                 if (clickable) {
                     console.log('Setting clickable...');
                     div.click(function(queueKey, currentInfo) {
@@ -63,18 +73,16 @@ var renderQueue = function(clickable) {
                         }
                     }(key, info));
                 }
-                var index = $('<p>', { text: count} );
-                div.append(index);
-                if (patient) {
-                    var patientNameLabel =
-                        $('<p>', { text : patient.first_name + ' ' + patient.last_name });
-                    div.append(patientNameLabel);
-                }
+                var header = $('<div>', { class: 'panel-heading',
+                                          text: count + '. ' + patient.first_name
+                                          + ' ' + patient.last_name });
+                div.append(header);
+                var bodyText = 'unknown';
                 if (visit) {
-                    var symptomLabel =
-                        $('<p>', { text : visit.symptoms });
-                    div.append(symptomLabel);
+                    bodyText = visit.symptoms;
                 }
+                var body = $('<div>', { class: 'panel-body', text: bodyText });
+                div.append(body);
                 queuePanel.append(div);
                 ++count;
             }

@@ -9,7 +9,7 @@ var patientKeys = {
                 'type': 'phone',
                 'size': 15 },
     'dob' : { 'display' : 'Date of birth',
-              'type': 'date' },
+              'type': 'dob' },
     'address' : { 'display' : 'Address',
                   'type': 'text' },
     'email' : { 'display' : 'Email',

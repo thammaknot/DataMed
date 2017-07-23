@@ -44,9 +44,18 @@ var renderNewVisit = function(userId, dateString) {
         containerDiv.append(row);
     }
 
-    var updateButton = $('<button>', { text: 'Update'} );
-    var queueButton = $('<button>', { text: 'Queue'} );
-    var deleteButton = $('<button>', { text: 'Delete'} );
+    var updateButton = $('<button>', { class: 'btn btn-info', type: 'button' });
+    var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+    updateButton.append(updateIconSpan);
+    updateButton.append(' Save');
+    var queueButton = $('<button>', { class: 'btn btn-primary', type: 'button' });
+    var queueIconSpan = $('<span>', { class: 'glyphicon glyphicon-th-list' });
+    queueButton.append(queueIconSpan);
+    queueButton.append(' Queue');
+    var deleteButton = $('<button>', { class: 'btn btn-danger', type: 'button' });
+    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
+    deleteButton.append(deleteIconSpan);
+    deleteButton.append(' Delete');
 
     updateButton.click(function(curUserId) {
         return function() {
@@ -174,9 +183,11 @@ var dequeue = function(queueKey) {
 var renderVisitOverview = function(visitId, visitInfo) {
     var textContent = visitInfo.date + ' ';
     textContent += visitInfo.symptoms;
-    var output = $('<div>',
-                   { style: 'border-width: 2px; border-style: solid; border-color: black;',
-                     text: textContent });
+    var output = $('<div>', { class: 'panel panel-info'});
+    var header = $('<div>', {class: 'panel-heading', text: visitInfo.date});
+    var body = $('<div>', {class: 'panel-body', text: visitInfo.symptoms});
+    output.append(header);
+    output.append(body);
     output.click(function(curVisitInfo) {
         return function() {
             var visitDiv = renderVisitDiv(curVisitInfo);
@@ -194,7 +205,7 @@ var renderPastVisits = function(userId) {
             if (!visits) { return; }
             var pastVisitsPanel = $('#past_visits');
             pastVisitsPanel.empty();
-            var pastVisitsContents = $('<div>');
+            var pastVisitsContents = $('<div>', {class: 'panel-group'});
 
             var size = visits.length;
             var i = 1;

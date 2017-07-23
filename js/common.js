@@ -3,14 +3,14 @@ var print = function(s) {
 };
 
 var renderField = function(fieldKey, fieldInfo, value) {
-    var outputDiv = $('<div>', { class: 'form-group' });
+    var outputDiv = $('<div>', { class: 'form-group row' });
     outputDiv.append(renderFieldLabel(fieldKey, fieldInfo));
     outputDiv.append(renderFieldValue(fieldKey, fieldInfo, value));
     return outputDiv;
 };
 
 var renderFieldLabel = function(fieldKey, fieldInfo, value) {
-    var titleDiv = $('<div>', { class: 'control-label col-sm-2' });
+    var titleDiv = $('<div>');
     var h3 = $('<h3>', { text: fieldInfo.display });
     titleDiv.append(h3);
     return titleDiv;
@@ -19,7 +19,7 @@ var renderFieldLabel = function(fieldKey, fieldInfo, value) {
 var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
-    var wrapperDiv = $('<div>', { class: 'col-sm-5'});
+    var wrapperDiv = $('<div>', {class: 'col-md-6'});
     var element;
     var elementId = 'edit_' + fieldKey;
     var editable = true;
@@ -35,6 +35,7 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
             if (type == 'text') {
                 element = $('<textarea>', { id: elementId,
                                             text: value,
+                                            class: 'form-control',
                                             rows: 5,
                                             cols: 30});
             } else {
@@ -49,12 +50,30 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                                  value: value,
                                  class: 'form-control',
                                  disabled: !editable }).attr('size', 6);
+    } else if (type == 'dob') {
+        element = $('<input>', { id: elementId,
+                                 value: value,
+                                 class: 'form-control',
+                                 disabled: !editable });
+        element.datepicker({ dateFormat: 'dd/mm/yy',
+                             changeYear: true,
+                             showButtonPanel: true,
+                             changeMonth: true,
+                             minDate: null,
+                             maxDate: '+0d',
+                             yearRange: '-100:+0' });
     } else if (type == 'date') {
         element = $('<input>', { id: elementId,
                                  value: value,
                                  class: 'form-control',
                                  disabled: !editable });
-        element.datepicker({ dateFormat: 'dd/mm/yy' });
+        element.datepicker({ dateFormat: 'dd/mm/yy',
+                             changeYear: true,
+                             showButtonPanel: true,
+                             changeMonth: true,
+                             minDate: '0d',
+                             maxDate: '+1y',
+                             yearRange: '-0:+1' });
     } else if (type == 'prescriptions') {
         element = renderPrescriptionValue(value);
     } else if (type == 'cost') {
@@ -88,10 +107,14 @@ var getFieldValue = function(element) {
 };
 
 var renderCostValue = function(value) {
-    var div = $('<div>');
+    var div = $('<div>', { class: 'form-group' });
     var costTextField = $('<input>', { value: value,
+                                       class: 'form-control',
                                        id: 'edit_cost' });
-    var autoCostButton = $('<button>', { text: 'Auto' });
+    var autoCostButton = $('<button>', { class: 'btn btn-success' });
+    var autoIconSpan = $('<span>', { class: 'glyphicon glyphicon-flash' });
+    autoCostButton.append(autoIconSpan);
+    autoCostButton.append(' Auto');
     autoCostButton.click(function() {
         var prescriptionPanel = $('#prescription_panel');
         if (!prescriptionPanel || prescriptionPanel.children().length == 0) {
@@ -126,7 +149,10 @@ var renderPrescriptionValue = function(value) {
         div.append(row);
     }
     var wrapperDiv = $('<div>');
-    var addButton = $('<button>', { text: 'Add' });
+    var addButton = $('<button>', { class: 'btn btn-primary' });
+    var addIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
+    addButton.append(addIconSpan);
+    addButton.append(' Add');
     addButton.click(function() {
         addNewPrescription();
     });
@@ -136,11 +162,12 @@ var renderPrescriptionValue = function(value) {
 };
 
 var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice) {
-    var menu = $('<select>', { style: 'margin-right: 10px; display: inline-block;' });
-    var priceNameLabel = $('<p>', { text: 'Unit price',
-                                    style: 'display: inline-block; margin-right: 10px;'});
-    var priceLabel = $('<p>', { style: 'display: inline-block; margin-right: 10px;',
-                                'class': 'unit_price_value'});
+    var menu = $('<select>', { class: 'form-control',
+                               style: 'margin-right: 10px; display: inline-block;' });
+    var priceNameLabel = $('<label>', { text: 'Unit price',
+                                        style: 'display: inline-block; margin-right: 10px;'});
+    var priceLabel = $('<label>', { style: 'display: inline-block; margin-right: 10px;',
+                                    class: 'unit_price_value'});
     var unitPrice = -1;
     for (var key in prescriptionList) {
         var curMed = prescriptionList[key];
@@ -166,14 +193,16 @@ var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice)
 };
 
 var renderPrescriptionRow = function(name, unitPrice, quantity) {
-    var row = $('<div>', { 'class': 'prescription_row', style: 'display: inline-block;' });
+    var row = $('<div>', { 'class': 'prescription_row form-group', style: 'display: inline-block;' });
     var prescriptionNameAndPriceDiv =
         renderPrescriptionNameAndPriceMenu(name, unitPrice);
     var quantityTextField = $('<input>', { value: quantity,
-                                           'class': 'quantity_value',
+                                           'class': 'quantity_value form-control',
                                            style: 'display: inline-block;' }).attr('size', 5);
-    var deleteButton = $('<button>', { text: 'Delete',
-                                       style: 'display: inline-block;' });
+    var deleteButton = $('<button>', { class: 'btn btn-danger' });
+    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
+    deleteButton.append(deleteIconSpan);
+    deleteButton.append(' Delete');
     deleteButton.click(function(rowToDelete) {
         return function() {
             rowToDelete.remove();
