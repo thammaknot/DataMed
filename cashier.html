@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
+                        <li><a data-toggle="tab" href="#paymentQueuePanel">Payment Queue</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="paymentQueuePanel" class="tab-pane fade">
+                            <div><h2>Payment Queue</h2></div>
+                            <div id="payment_queue"></div>
+                        </div>
+
+                        <div id="treatmentQueuePanel" class="tab-pane fade in active">
+                            <div><h2>Treatment Queue</h2></div>
+                            <div id="treatment_queue"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
+        <script>
+         // Initialize Firebase
+         var config = {
+             apiKey: "AIzaSyBDVvafGz-6bYiP-okxefaJsBG-DTKf7-8",
+             authDomain: "datamed-ff926.firebaseapp.com",
+             databaseURL: "https://datamed-ff926.firebaseio.com",
+             projectId: "datamed-ff926",
+             storageBucket: "",
+             messagingSenderId: "750596412927"
+         };
+         firebase.initializeApp(config);
+        </script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="js/keys.js"></script>
+        <script src="js/common.js"></script>
+        <script src="js/visits.js"></script>
+        <script src="js/datamed.js"></script>
+        <script src="js/cashier.js"></script>
+        <script>
+         var provider = new firebase.auth.GoogleAuthProvider();
+         firebase.auth().onAuthStateChanged(function(user) {
+             if (user) {
+                 // User is signed in.
+                 renderTreatmentQueue();
+                 renderPaymentQueue();
+             } else {
+                 // No user is signed in.
+                 firebase.auth().signInWithPopup(provider).then(function(result) {
+                     // This gives you a Google Access Token. You can use it to access the Google API.
+                     var token = result.credential.accessToken;
+                     // The signed-in user info.
+                     var user = result.user;
+                     renderTreatmentQueue();
+                     renderPaymentQueue();
+                 }).catch(function(error) {
+                     // Handle Errors here.
+                     var errorCode = error.code;
+                     var errorMessage = error.message;
+                     // The email of the user's account used.
+                     var email = error.email;
+                     // The firebase.auth.AuthCredential type that was used.
+                     var credential = error.credential;
+                     console.log(error);
+                 });
+             }
+         });
+        </script>
+    </body>
+</html>
