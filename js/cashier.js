@@ -71,29 +71,40 @@ var renderPaymentQueue = function() {
                 var info = queue[key];
                 var patient = info.patient;
                 var visit = info.visit;
-                var div = $('<div>', { class: 'panel panel-success' });
+                var div = $('<div>', { class: 'panel panel-primary' });
                 var header = $('<div>', { class: 'panel-heading',
                                           text: count + '. ' + patient.first_name
                                           + ' ' + patient.last_name });
                 div.append(header);
-                var symptomSpan = $('<span>', { class: 'label label-primary'}).text(visit.symptoms);
-                var prescriptionDiv = renderPrescription(visit);
+
+                var list = $('<ul>', { class: 'list-group' });
+
+                var symptomItem = $('<li>', { class: 'list-group-item list-group-item-info'}).text(visit.symptoms);
+                var prescriptionListItems = getPrescriptionListItems(visit);
+                var treatmentListItems = getTreatmentListItems(visit);
+                var nextVisitItem = $('<li>', { class: 'list-group-item list-group-item-danger'})
+                    .text('Next visit: ' + (visit.next_visit ? visit.next_visit : '-'));
                 var costString = (visit.cost ? visit.cost : '0') + ' Baht';
-                var paymentSpan = $('<span>', { class: 'label label-danger' }).text(costString);
+                var paymentItem = $('<li>', { class: 'list-group-item list-group-item-success' });
+                var costText = $('<strong>').text(costString);
+                paymentItem.append(costText);
                 var doneButton = $('<button>', { class: 'btn btn-success' });
                 var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-ok' });
                 var moneyIconSpan = $('<span>', { class: 'glyphicon glyphicon-bitcoin' });
                 doneButton.append(moneyIconSpan);
                 doneButton.append(doneIconSpan);
-                doneButton.click(function(queueKey, queueInfo) {
+                doneButton.click(function(queueKey, queueInfo, cost) {
                     return function() {
-                        removeFromPaymentQueue(queueKey);
+                        showPaymentConfirmationDialog(queueKey, queueInfo, cost);
                     };
-                }(key, info));
+                }(key, info, visit.cost));
                 var body = $('<div>', { class: 'panel-body'});
-                body.append(symptomSpan);
-                body.append(paymentSpan);
-                body.append(prescriptionDiv);
+                list.append(symptomItem);
+                list.append(prescriptionListItems);
+                list.append(treatmentListItems);
+                list.append(nextVisitItem);
+                list.append(paymentItem);
+                body.append(list);
                 body.append(doneButton);
                 div.append(body);
                 queuePanel.append(div);
@@ -102,18 +113,72 @@ var renderPaymentQueue = function() {
         });
 };
 
-var renderPrescription = function(visitInfo) {
-    var output = $('<div>');
-    var list = $('<ul>', { class: 'list-group' });
+var showPaymentConfirmationDialog = function(queueKey, queueInfo, cost) {
+    var dialog = $('<div>', { id: 'knot', class: 'modal fade', role: 'dialog' });
+
+    var div1 = $('<div>', { class: 'modal-dialog' });
+    var div2 = $('<div>', { class: 'modal-content' });
+    var header = $('<div>', { class: 'modal-header' });
+    var headerText = $('<h4>', { class: 'modal-title' }).text('Confirm Payment');
+
+    var body = $('<div>', { class: 'modal-body' }).text('Have you received payment of ' + cost + ' Baht from the patient?');
+    var footer = $('<div>', { class: 'modal-footer' });
+    var yesButton = $('<button>', { type: 'button', class: 'btn btn-success' }).text('Yes');
+    yesButton.click(function() {
+        dialog.modal('toggle');
+        removeFromPaymentQueue(queueKey);
+        addToDailyReport(queueKey, queueInfo);
+    });
+
+    var noButton = $('<button>', { type: 'button', class: 'btn btn-danger' }).text('No');
+    noButton.click(function() {
+        dialog.modal('toggle');
+    });
+
+    header.append(headerText);
+    footer.append(noButton);
+    footer.append(yesButton);
+    div1.append(div2);
+    div2.append([header, body, footer]);
+    dialog.append(div1);
+    dialog.modal('show');
+};
+
+var addToDailyReport = function(queueKey, queueInfo) {
+    var visit = queueInfo.visit;
+    var dateString = visit.date;
+    var dateTokens = dateString.split(' ');
+    var dateParts = dateTokens[0].split('/');
+    var dateObj = new Date(dateParts[2], dateParts[1] - 1, dateParts[0]);
+    var year = dateObj.getYear() + 1900;
+    var month = dateObj.getMonth() + 1;
+    var day = dateObj.getDate();
+    firebase.database().ref('daily-reports/' + year + '/' +  month + '/' + day).push(visit);
+};
+
+var getPrescriptionListItems = function(visitInfo) {
+    var output = [];
     var prescriptions = visitInfo.prescriptions;
     for (var prescription in prescriptions) {
         var item = $('<li>', { class: 'list-group-item' });
         var pInfo = prescriptions[prescription];
         var prescriptionString = pInfo.name + ' ' + pInfo.quantity;
         item.text(prescriptionString);
-        list.append(item);
+        output.push(item);
     }
-    output.append(list);
+    return output;
+};
+
+var getTreatmentListItems = function(visitInfo) {
+    var output = [];
+    var treatments = visitInfo.treatments;
+    for (var treatment in treatments) {
+        var item = $('<li>', { class: 'list-group-item list-group-item-warning' });
+        var pInfo = treatments[treatment];
+        var treatmentString = pInfo.name + ' ' + pInfo.quantity;
+        item.text(treatmentString);
+        output.push(item);
+    }
     return output;
 };
 
