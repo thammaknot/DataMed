@@ -52,11 +52,10 @@ var renderQueue = function(clickable) {
     var database = firebase.database();
     database.ref('queue/').orderByChild('time')
         .on('value', function(data) {
-            print('Rendering queue');
-            var queue = data.val();
-            if (!queue) { return; }
             var queuePanel = $('#queue');
             queuePanel.empty();
+            var queue = data.val();
+            if (!queue) { return; }
             var count = 1;
             for (var key in queue) {
                 var info = queue[key];

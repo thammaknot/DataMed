@@ -1,49 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-7">
-                    <div>
-                        <h2>Patient Info</h2>
-                    </div>
-                    <div id="patient_info_panel"></div>
-                    <div id="visit_panel"></div>
-                </div>
-                <div class="col-md-5">
-                    <ul class="nav nav-tabs">
-                        <li><a data-toggle="tab" href="#visits">Past Visits</a></li>
-                        <li class="active"><a data-toggle="tab" href="#queuePanel">Queue</a></li>
-                        <li><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="visits" class="tab-pane fade">
-                            <div id="past_visits_header">
-                                <h2>Past Visits</h2>
-                            </div>
-                            <div id="past_visits">
-                            </div>
-                        </div>
-
-                        <div id="treatmentQueuePanel" class="tab-pane fade">
-                            <div><h2>Treatment Queue</h2></div>
-                            <div id="treatment_queue"></div>
-                        </div>
-
-                        <div id="queuePanel" class="tab-pane fade in active">
-                            <div><h2>Queue</h2></div>
-                            <div id="queue"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div id="treatment_list">
         </div>
-
+        <hr>
+        <div id="treatment_button_panel">
+        </div>
         <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>
         <script>
          // Initialize Firebase
@@ -61,20 +27,17 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/keys.js"></script>
         <script src="js/common.js"></script>
+        <script src="js/treatments.js"></script>
         <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>
-        <script src="js/cashier.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
          firebase.auth().onAuthStateChanged(function(user) {
              if (user) {
                  // User is signed in.
-                 loadPrescriptionList();
-                 renderQueue(true);
-                 renderTreatmentQueue();
+                 renderTreatments();
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -82,9 +45,7 @@
                      var token = result.credential.accessToken;
                      // The signed-in user info.
                      var user = result.user;
-                     loadPrescriptionList();
-                     renderQueue(true);
-                     renderTreatmentQueue();
+                     renderTreatments();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;

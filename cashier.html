@@ -8,36 +8,20 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-md-7">
-                    <div>
-                        <h2>Patient Info</h2>
-                    </div>
-                    <div id="patient_info_panel"></div>
-                    <div id="visit_panel"></div>
-                </div>
-                <div class="col-md-5">
+                <div class="col-md-12">
                     <ul class="nav nav-tabs">
-                        <li><a data-toggle="tab" href="#visits">Past Visits</a></li>
-                        <li class="active"><a data-toggle="tab" href="#queuePanel">Queue</a></li>
-                        <li><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
+                        <li class="active"><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
+                        <li><a data-toggle="tab" href="#paymentQueuePanel">Payment Queue</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div id="visits" class="tab-pane fade">
-                            <div id="past_visits_header">
-                                <h2>Past Visits</h2>
-                            </div>
-                            <div id="past_visits">
-                            </div>
+                        <div id="paymentQueuePanel" class="tab-pane fade">
+                            <div><h2>Payment Queue</h2></div>
+                            <div id="payment_queue"></div>
                         </div>
 
-                        <div id="treatmentQueuePanel" class="tab-pane fade">
+                        <div id="treatmentQueuePanel" class="tab-pane fade in active">
                             <div><h2>Treatment Queue</h2></div>
                             <div id="treatment_queue"></div>
-                        </div>
-
-                        <div id="queuePanel" class="tab-pane fade in active">
-                            <div><h2>Queue</h2></div>
-                            <div id="queue"></div>
                         </div>
                     </div>
                 </div>
@@ -72,9 +56,8 @@
          firebase.auth().onAuthStateChanged(function(user) {
              if (user) {
                  // User is signed in.
-                 loadPrescriptionList();
-                 renderQueue(true);
                  renderTreatmentQueue();
+                 renderPaymentQueue();
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -82,9 +65,8 @@
                      var token = result.credential.accessToken;
                      // The signed-in user info.
                      var user = result.user;
-                     loadPrescriptionList();
-                     renderQueue(true);
                      renderTreatmentQueue();
+                     renderPaymentQueue();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;
