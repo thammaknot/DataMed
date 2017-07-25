@@ -10,16 +10,14 @@ var renderField = function(fieldKey, fieldInfo, value) {
 };
 
 var renderFieldLabel = function(fieldKey, fieldInfo, value) {
-    var titleDiv = $('<div>');
-    var titleText = $('<h5>', { text: fieldInfo.display });
-    titleDiv.append(titleText);
-    return titleDiv;
+    var label = $('<label>', { class: 'control-label col-sm-3' }).text(fieldInfo.display);
+    return label;
 };
 
 var renderFieldValue = function(fieldKey, fieldInfo, value) {
     var type = fieldInfo.type;
 
-    var wrapperDiv = $('<div>', {class: 'col-md-6'});
+    var wrapperDiv = $('<div>', {class: 'col-sm-9'});
     var element;
     var elementId = 'edit_' + fieldKey;
     var editable = true;

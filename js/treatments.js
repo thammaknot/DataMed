@@ -7,18 +7,17 @@ var renderTreatments = function() {
             var outerForm = $('<form>', { class: 'form-horizontal'});
             for (var key in treatments) {
                 var info = treatments[key];
-                var row = $('<div>', { id: key,
-                                       style: 'border-style: solid; '
-                                       + 'border-width: 2px; border-color: grey;' });
+                var panel = $('<div>', { class: 'panel panel-primary' });
+                var body = $('<div>', { class: 'panel-body' });
                 for (var fieldKey in treatmentKeys) {
                     var field = renderField(fieldKey, treatmentKeys[fieldKey], info[fieldKey]);
-                    row.append(field);
+                    body.append(field);
                 }
                 var deleteButton = $('<button>', { text: 'Delete',
-                                                   class: 'btn btn-danger'});
-                row.append(deleteButton);
-                // treatmentPanel.append(row);
-                outerForm.append(row);
+                                                   class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+                body.append(deleteButton);
+                panel.append(body);
+                outerForm.append(panel);
             }
             treatmentPanel.append(outerForm);
         });
