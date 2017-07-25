@@ -4,21 +4,20 @@ var renderPrescriptions = function() {
             var prescriptions = data.val();
             if (!prescriptions) { return; }
             var prescriptionPanel = $('#prescription_list');
-            var outerForm = $('<form>', { class: 'form-horizontal'});
+            var outerForm = $('<form>', { class: 'form-horizontal' });
             for (var key in prescriptions) {
                 var info = prescriptions[key];
-                var row = $('<div>', { id: key,
-                                       style: 'border-style: solid; '
-                                       + 'border-width: 2px; border-color: grey;' });
+                var panel = $('<div>', { class: 'panel panel-primary' });
+                var body = $('<div>', { class: 'panel-body' });
                 for (var fieldKey in prescriptionKeys) {
                     var field = renderField(fieldKey, prescriptionKeys[fieldKey], info[fieldKey]);
-                    row.append(field);
+                    body.append(field);
                 }
                 var deleteButton = $('<button>', { text: 'Delete',
-                                                   class: 'btn btn-danger'});
-                row.append(deleteButton);
-                // prescriptionPanel.append(row);
-                outerForm.append(row);
+                                                   class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+                body.append(deleteButton);
+                panel.append(body);
+                outerForm.append(panel);
             }
             prescriptionPanel.append(outerForm);
         });
