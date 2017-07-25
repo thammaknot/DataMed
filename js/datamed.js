@@ -1,5 +1,4 @@
 var renderPage = function() {
-    $('#signin_warning').hide();
     $('#main').show();
 };
 
