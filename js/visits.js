@@ -199,7 +199,8 @@ var addNewTreatment = function() {
 
 var addToPostQueue = function(queueKey, queueInfo) {
     var visit = queueInfo.visit;
-    if (visit.treatments) {
+    print(visit.treatments);
+    if (visit.treatments && !jQuery.isEmptyObject(visit.treatments)) {
         firebase.database().ref('treatment-queue/' + queueKey).update(queueInfo);
     } else {
         firebase.database().ref('payment-queue/' + queueKey).update(queueInfo);
