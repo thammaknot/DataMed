@@ -13,46 +13,20 @@
                         <a class="navbar-brand" href="#">DataMed</a>
                     </div>
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="doctor.html">Doctor</a></li>
-                        <li><a href="report.html">Reports</a></li>
+                        <li><a href="doctor.html">Doctor</a></li>
+                        <li class="active"><a href="report.html">Reports</a></li>
                         <li><a href="prescriptions.html">Prescriptions</a></li>
                         <li><a href="treatments.html">Treatments</a></li>
                     </ul>
                 </div>
             </nav>
             <div class="row">
-                <div class="col-md-7">
-                    <div>
-                        <h2>Patient Info</h2>
-                    </div>
-                    <div id="patient_info_panel"></div>
-                    <div id="visit_panel"></div>
-                </div>
-                <div class="col-md-5">
-                    <ul class="nav nav-tabs">
-                        <li><a data-toggle="tab" href="#visits">Past Visits</a></li>
-                        <li class="active"><a data-toggle="tab" href="#queuePanel">Queue</a></li>
-                        <li><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div id="visits" class="tab-pane fade">
-                            <div id="past_visits_header">
-                                <h2>Past Visits</h2>
-                            </div>
-                            <div id="past_visits">
-                            </div>
-                        </div>
-
-                        <div id="treatmentQueuePanel" class="tab-pane fade">
-                            <div><h2>Treatment Queue</h2></div>
-                            <div id="treatment_queue"></div>
-                        </div>
-
-                        <div id="queuePanel" class="tab-pane fade in active">
-                            <div><h2>Queue</h2></div>
-                            <div id="queue"></div>
-                        </div>
-                    </div>
+                <div class="col-md-12">
+                    <div id="controlPanel"></div>
+                    <div><h2>Summary</h2></div>
+                    <div id="reportSummary"></div>
+                    <div><h2>Reports</h2></div>
+                    <div id="reportPanel"></div>
                 </div>
             </div>
         </div>
@@ -80,14 +54,13 @@
         <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>
         <script src="js/cashier.js"></script>
+        <script src="js/report.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
          firebase.auth().onAuthStateChanged(function(user) {
              if (user) {
                  // User is signed in.
-                 loadPrescriptionList();
-                 renderQueue(true);
-                 renderTreatmentQueue();
+                 renderReports(new Date());
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -95,9 +68,7 @@
                      var token = result.credential.accessToken;
                      // The signed-in user info.
                      var user = result.user;
-                     loadPrescriptionList();
-                     renderQueue(true);
-                     renderTreatmentQueue();
+                     renderReports(new Date());
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;

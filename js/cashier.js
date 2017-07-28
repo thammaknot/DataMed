@@ -58,6 +58,28 @@ var addToPaymentQueue = function(queueKey, queueInfo) {
     firebase.database().ref('payment-queue/' + queueKey).update(queueInfo);
 };
 
+var renderVisitSummary = function(visit) {
+    var list = $('<ul>', { class: 'list-group' });
+
+    var symptomItem = $('<li>', { class: 'list-group-item list-group-item-info'}).text(visit.symptoms);
+    var prescriptionListItems = getPrescriptionListItems(visit);
+    var treatmentListItems = getTreatmentListItems(visit);
+    var nextVisitItem = $('<li>', { class: 'list-group-item list-group-item-danger'})
+        .text('Next visit: ' + (visit.next_visit ? visit.next_visit : '-'));
+    var costString = (visit.cost ? visit.cost : '0') + ' Baht';
+    var paymentItem = $('<li>', { class: 'list-group-item list-group-item-success' });
+    var costText = $('<strong>').text(costString);
+    paymentItem.append(costText);
+    list.append(symptomItem);
+    list.append(prescriptionListItems);
+    list.append(treatmentListItems);
+    list.append(nextVisitItem);
+    list.append(paymentItem);
+    var body = $('<div>', { class: 'panel-body'});
+    body.append(list);
+    return body;
+};
+
 var renderPaymentQueue = function() {
     var database = firebase.database();
     database.ref('payment-queue/').orderByChild('time')
@@ -76,18 +98,8 @@ var renderPaymentQueue = function() {
                                           text: count + '. ' + patient.first_name
                                           + ' ' + patient.last_name });
                 div.append(header);
+                var body = renderVisitSummary(visit);
 
-                var list = $('<ul>', { class: 'list-group' });
-
-                var symptomItem = $('<li>', { class: 'list-group-item list-group-item-info'}).text(visit.symptoms);
-                var prescriptionListItems = getPrescriptionListItems(visit);
-                var treatmentListItems = getTreatmentListItems(visit);
-                var nextVisitItem = $('<li>', { class: 'list-group-item list-group-item-danger'})
-                    .text('Next visit: ' + (visit.next_visit ? visit.next_visit : '-'));
-                var costString = (visit.cost ? visit.cost : '0') + ' Baht';
-                var paymentItem = $('<li>', { class: 'list-group-item list-group-item-success' });
-                var costText = $('<strong>').text(costString);
-                paymentItem.append(costText);
                 var doneButton = $('<button>', { class: 'btn btn-success' });
                 var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-ok' });
                 var moneyIconSpan = $('<span>', { class: 'glyphicon glyphicon-bitcoin' });
@@ -98,13 +110,6 @@ var renderPaymentQueue = function() {
                         showPaymentConfirmationDialog(queueKey, queueInfo, cost);
                     };
                 }(key, info, visit.cost));
-                var body = $('<div>', { class: 'panel-body'});
-                list.append(symptomItem);
-                list.append(prescriptionListItems);
-                list.append(treatmentListItems);
-                list.append(nextVisitItem);
-                list.append(paymentItem);
-                body.append(list);
                 body.append(doneButton);
                 div.append(body);
                 queuePanel.append(div);
@@ -153,7 +158,7 @@ var addToDailyReport = function(queueKey, queueInfo) {
     var year = dateObj.getYear() + 1900;
     var month = dateObj.getMonth() + 1;
     var day = dateObj.getDate();
-    firebase.database().ref('daily-reports/' + year + '/' +  month + '/' + day).push(visit);
+    firebase.database().ref('daily-reports/' + year + '/' +  month + '/' + day).push(queueInfo);
 };
 
 var getPrescriptionListItems = function(visitInfo) {
