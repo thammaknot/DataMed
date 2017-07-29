@@ -96,13 +96,15 @@ var getCurrentPrescriptionOrTreatment = function(prefix) {
         return prescriptionInfo;
     }
     $(prescriptionPanel).find('div.' + prefix + '_row').each(function() {
-        var unitPrice = $(this).find('p.unit_price_value').text();
+        var unitPrice = $(this).find('label.unit_price_value').text();
         var quantity = $(this).find('input.quantity_value').val();
         var medName = $(this).find('select option:selected').text();
+        var usage = $(this).find('input.usage').val();
         prescriptionInfo[medName] = {
             name: medName,
             unit_price: unitPrice,
-            quantity: quantity
+            quantity: quantity,
+            usage: usage
         };
     });
     return prescriptionInfo;

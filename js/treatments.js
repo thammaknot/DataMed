@@ -7,7 +7,7 @@ var renderTreatments = function() {
             var outerForm = $('<form>', { class: 'form-horizontal'});
             for (var key in treatments) {
                 var info = treatments[key];
-                var panel = $('<div>', { class: 'panel panel-primary' });
+                var panel = $('<div>', { class: 'panel panel-primary', id: key });
                 var body = $('<div>', { class: 'panel-body' });
                 for (var fieldKey in treatmentKeys) {
                     var field = renderField(fieldKey, treatmentKeys[fieldKey], info[fieldKey]);
@@ -53,9 +53,16 @@ var newTreatment = function() {
 
 var saveTreatments = function() {
     var map = {};
-    $('#treatment_list').children('div').each(function() {
+    $('#treatment_list').children('form').children('div').each(function() {
         var treatmentId = $(this).attr('id');
         var info = {};
+        for (var key in treatmentKeys) {
+            var value = $(this).find('#edit_' + key).val();
+            if (value) {
+                info[key] = value;
+            }
+        }
+        /*
         var allInputFields = $(this).find('input').each(
             function() {
                 var fieldKey = $(this).attr('id').substring(5);
@@ -63,7 +70,9 @@ var saveTreatments = function() {
                 info[fieldKey] = fieldValue;
             }
         );
+        */
         map[treatmentId] = info;
     });
+    print(map);
     firebase.database().ref('treatments/').update(map);
 }
