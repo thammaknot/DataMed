@@ -49,15 +49,15 @@ var renderNewVisit = function(userId, dateString) {
     var updateButton = $('<button>', { class: 'btn btn-info', type: 'button' });
     var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
     updateButton.append(updateIconSpan);
-    updateButton.append(' Save');
+    updateButton.append(' ' + STRINGS.save);
     var queueButton = $('<button>', { class: 'btn btn-primary', type: 'button' });
     var queueIconSpan = $('<span>', { class: 'glyphicon glyphicon-th-list' });
     queueButton.append(queueIconSpan);
-    queueButton.append(' Queue');
+    queueButton.append(' ' + STRINGS.doctor_queue);
     var deleteButton = $('<button>', { class: 'btn btn-danger', type: 'button' });
     var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
     deleteButton.append(deleteIconSpan);
-    deleteButton.append(' Delete');
+    deleteButton.append(' ' + STRINGS.delete);
 
     updateButton.click(function(curUserId) {
         return function() {
@@ -170,7 +170,7 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
         var updateButton = $('<button>', { class: 'btn btn-primary' });
         var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
         updateButton.append(updateIconSpan);
-        updateButton.append(' Save');
+        updateButton.append(' ' + STRINGS.save);
         updateButton.click(function() {
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
         });
@@ -179,7 +179,7 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
         var doneButton = $('<button>', { class: 'btn btn-success' });
         var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-check' });
         doneButton.append(doneIconSpan);
-        doneButton.append(' Finish');
+        doneButton.append(' ' + STRINGS.finish);
         doneButton.click(function() {
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
             dequeue(queueKey);

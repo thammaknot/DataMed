@@ -4,30 +4,21 @@ var renderTreatments = function() {
             var treatments = data.val();
             if (!treatments) { return; }
             var treatmentPanel = $('#treatment_list');
-            var outerForm = $('<form>', { class: 'form-horizontal'});
+            var outerForm = $('<form>', { class: 'form-horizontal', id: 'treatmentListContainer' });
             for (var key in treatments) {
                 var info = treatments[key];
-                var panel = $('<div>', { class: 'panel panel-primary', id: key });
-                var body = $('<div>', { class: 'panel-body' });
-                for (var fieldKey in treatmentKeys) {
-                    var field = renderField(fieldKey, treatmentKeys[fieldKey], info[fieldKey]);
-                    body.append(field);
-                }
-                var deleteButton = $('<button>', { text: 'Delete',
-                                                   class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
-                body.append(deleteButton);
-                panel.append(body);
+                var panel = renderTreatmentPanel(key, info);
                 outerForm.append(panel);
             }
             treatmentPanel.append(outerForm);
         });
-    var saveButton = $('<button>', { text: 'Save',
+    var saveButton = $('<button>', { text: STRINGS.save,
                                      class: 'btn btn-success',
                                      id: 'save_treatment_button'});
     saveButton.click(function() {
         saveTreatments();
     });
-    var newTreatmentButton = $('<button>', { text: 'New',
+    var newTreatmentButton = $('<button>', { text: STRINGS.new_treatment,
                                                 class: 'btn btn-primary',
                                                 id: 'new_treatment_button'});
     newTreatmentButton.click(function() {
@@ -39,16 +30,24 @@ var renderTreatments = function() {
 };
 
 var newTreatment = function() {
-    var panel = $('#treatment_list');
-    var element = $('<div>', { style: 'border-style: solid; '
-                               + 'border-width: 2px; border-color: grey;'});
-    for (key in treatmentKeys) {
-        element.append(renderField(key, treatmentKeys[key], ''));
-    }
-    panel.append(element);
     var treatmentId = firebase.database().ref('treatments/').push({});
-    console.log(treatmentId);
-    element.attr('id', treatmentId.key);
+    print(treatmentId);
+    var panel = renderTreatmentPanel(treatmentId.key, {});
+    $('#treatmentListContainer').append(panel);
+};
+
+var renderTreatmentPanel = function(key, info) {
+    var panel = $('<div>', { class: 'panel panel-primary', id: key });
+    var body = $('<div>', { class: 'panel-body' });
+    for (var fieldKey in treatmentKeys) {
+        var field = renderField(fieldKey, treatmentKeys[fieldKey], info[fieldKey]);
+        body.append(field);
+    }
+    var deleteButton = $('<button>', { text: STRINGS.delete,
+                                       class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    body.append(deleteButton);
+    panel.append(body);
+    return panel;
 };
 
 var saveTreatments = function() {
@@ -62,15 +61,6 @@ var saveTreatments = function() {
                 info[key] = value;
             }
         }
-        /*
-        var allInputFields = $(this).find('input').each(
-            function() {
-                var fieldKey = $(this).attr('id').substring(5);
-                var fieldValue = $(this).val();
-                info[fieldKey] = fieldValue;
-            }
-        );
-        */
         map[treatmentId] = info;
     });
     print(map);

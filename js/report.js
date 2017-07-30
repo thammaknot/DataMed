@@ -18,10 +18,8 @@ var renderReports = function(date) {
                     totalRevenue += Number(reports[key].visit.cost);
                 }
             }
-            print('herehhere');
             var summaryText = year + '/' + month + '/' + day + ' ';
-            summaryText += numPatients + ' patients. Total revenue: ' + totalRevenue;
-            print(summaryText);
+            summaryText += STRINGS.patient + ' ' + numPatients + ' ' + STRINGS.patient_unit + ' ' + STRINGS.total_revenue + ' ' + totalRevenue + ' ' + STRINGS.currency;
             $('#reportSummary').text(summaryText);
         });
     var datePicker = $('<input>', { id: 'reportDateInput',
@@ -39,19 +37,19 @@ var renderReports = function(date) {
     datePicker.change(function() {
         var input = datePicker.val();
         if (!input) {
-            alert('Please enter a valid date (dd/mm/yyyy).');
+            alert(STRINGS.enter_valid_date);
             return;
         }
         var tokens = input.split('/');
         if (tokens.length != 3) {
-            alert('Please enter a valid date (dd/mm/yyyy).');
+            alert(STRINGS.enter_valid_date);
             return;
         }
         renderReports(new Date(Number(tokens[2]), Number(tokens[1]) - 1, Number(tokens[0])));
     });
     var control = $('#controlPanel');
     control.empty();
-    var controlText = $('<label>').text('Pick a report date');
+    var controlText = $('<label>').text(STRINGS.pick_report_date);
     control.append(controlText);
     control.append(datePicker);
 };

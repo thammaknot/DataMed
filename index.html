@@ -14,28 +14,28 @@
                             <a class="navbar-brand" href="#">DataMed</a>
                         </div>
                         <ul class="nav navbar-nav">
-                            <li class="active"><a href="index.html">Patients</a></li>
-                            <li><a href="cashier.html">Queues</a></li>
+                            <li class="active"><a href="index.html">ค้นประวัติคนใข้</a></li>
+                            <li><a href="cashier.html">คิว</a></li>
                         </ul>
                     </div>
                 </nav>
-                <h1>Find a patient</h1>
+                <h1>ค้นประวัติ</h1>
                 <form id="find_patient_form">
                     <div class="form-group">
-                        <label>First name</label><input class="form-control" type="text" id="first_name"><br>
+                        <label>ชื่อ</label><input class="form-control" type="text" id="first_name"><br>
                     </div>
                     <div class="form-group">
-                        <label>Last name</label><input class="form-control" type="text" id="last_name"><br>
+                        <label>นามสกุล</label><input class="form-control" type="text" id="last_name"><br>
                     </div>
                     <div class="form-group">
-                        <label>Phone number</label><input class="form-control" type="text" id="phone_number">
+                        <label>เบอร์โทรศัพท์</label><input class="form-control" type="text" id="phone_number">
                     </div>
                     <div class="form-group" id="buttons">
                         <button class="btn btn-primary" type="button" onclick="findPatient()">
-                            <span class="glyphicon glyphicon-search"></span> Search
+                            <span class="glyphicon glyphicon-search"></span> ค้นหา
                         </button>
                         <button class="btn btn-danger" type="button" onclick="addNewPatient()">
-                            <span class="glyphicon glyphicon-plus"></span> New Patient
+                            <span class="glyphicon glyphicon-plus"></span> ลงทะเบียนคนใข้ใหม่
                         </button>
                     </div>
                 </form>
@@ -59,6 +59,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/keys.js"></script>
+        <script src="js/strings.js"></script>
         <script src="js/datamed.js"></script>
         <script>
          var provider = new firebase.auth.GoogleAuthProvider();
