@@ -18,6 +18,7 @@ var STRINGS = {
     enter_valid_date: 'โปรดใส่วันที่ให้ถูกต้อง (วว/ดด/ปปปป)',
     cannot_queue_patient: 'ข้อมูลคนใข้ไม่ถูกต้อง ไม่สามารถเข้าคิวได้',
     patient_not_found: 'ไม่พบคนไข้',
+    cost_is_zero: 'ค่ารักษาพยาบาล 0 บาท ดำเนินการต่อไหม?',
     patient: 'คนใข้',
     patient_unit: 'คน',
     total_revenue: 'รายได้รวม',
