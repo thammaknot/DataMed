@@ -10,7 +10,7 @@ var renderPatientInfo = function(id) {
     database.once('value', function(data) {
         var patient = data.val();
         if (!patient) {
-            $('#main').append('Patient not found');
+            $('#main').append(STRINGS.patient_not_found);
             return;
         }
         currentPatient = patient;
@@ -62,7 +62,6 @@ var renderQueue = function(clickable) {
                 var visit = info.visit;
                 var div = $('<div>', { class: 'panel panel-primary' });
                 if (clickable) {
-                    console.log('Setting clickable...');
                     div.click(function(queueKey, currentInfo) {
                         return function() {
                             displayFullVisit(queueKey, currentInfo);
@@ -74,7 +73,7 @@ var renderQueue = function(clickable) {
                                           text: count + '. ' + patient.first_name
                                           + ' ' + patient.last_name });
                 div.append(header);
-                var bodyText = 'unknown';
+                var bodyText = 'ไม่มีรายละเอียดอาการ';
                 if (visit) {
                     bodyText = visit.symptoms;
                 }
@@ -88,7 +87,7 @@ var renderQueue = function(clickable) {
 
 var queuePatient = function(userId, visitId) {
     if (!currentVisit || !currentPatient) {
-        window.alert('Unable to queue empty patient/visit');
+        window.alert(STRINGS.cannot_queue_patient);
         return;
     }
     firebase.database().ref('queue/').push({
@@ -224,7 +223,7 @@ var addNewPatient = function() {
     var firstName = $('#first_name').val();
     var lastName = $('#last_name').val();
     if (!firstName || !lastName) {
-        alert('Please enter both first and last names');
+        alert(STRINGS.enter_first_and_last_names);
         return;
     }
 

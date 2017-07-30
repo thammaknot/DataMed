@@ -153,7 +153,7 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
     var outputDiv = $('<div>',
                       { class: 'panel panel-info' });
     var header = $('<div>', { class: 'panel-heading' });
-    var headerText = $('<h4>').text('Visit Info');
+    var headerText = $('<h4>').text(STRINGS.visit_info);
     header.append(headerText);
     outputDiv.append(header);
     var body = $('<div>', { class: 'panel-body' });
