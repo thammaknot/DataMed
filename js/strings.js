@@ -25,6 +25,6 @@ var STRINGS = {
     select: 'เลือก...',
     new_prescription: 'เพิ่มชนิดยา',
     new_treatment: 'เพิ่มชนิดกายภาพบำบัด',
-    have_you_recieved_payment1: 'ได้รับเงิน',
-    have_you_recieved_payment2: 'จากคนใข้แล้วใช่ไหม?',
+    have_you_received_payment1: 'ได้รับเงิน',
+    have_you_received_payment2: 'จากคนใข้แล้วใช่ไหม?',
 };
