@@ -16,7 +16,6 @@ var renderPrescriptions = function() {
                                      class: 'btn btn-success',
                                      id: 'save_prescription_button'});
     saveButton.click(function() {
-        print('Save button clicked!');
         savePrescriptions();
     });
     var newPrescriptionButton = $('<button>', { text: STRINGS.new_prescription,
