@@ -24,11 +24,11 @@ var renderPatientInfo = function(id) {
         var saveButton = $('<button>', { type: 'button', class: 'btn btn-primary'});
         var saveIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
         saveButton.append(saveIconSpan);
-        saveButton.append(' Save');
+        saveButton.append(' ' + STRINGS.save);
         var newVisitButton = $('<button>', { type: 'button', class: 'btn btn-danger'});
         var newVisitIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
         newVisitButton.append(newVisitIconSpan);
-        newVisitButton.append(' New visit');
+        newVisitButton.append(' ' + STRINGS.new_visit);
         saveButton.click(function(patientId) {
             return function() {
                 savePatientInfo(patientId);
@@ -144,7 +144,7 @@ var renderResults = function(results) {
     var resultPanel = $('#result_panel');
     resultPanel.empty();
     var content = '<table class="table">'
-    content += '<thead><tr><th>No.</th><th>First name</th><th>Last name</th><th>Phone</th></tr></thead>\n';
+    content += '<thead><tr><th>' + STRINGS.order + '</th><th>' + STRINGS.first_name + '</th><th>' + STRINGS.last_name + '</th><th>' + STRINGS.phone_number + '</th></tr></thead>\n';
     var i = 1;
     for (var id in results) {
         var patient = results[id];
@@ -153,7 +153,7 @@ var renderResults = function(results) {
         content += '<td>' + patient['first_name'] + '</td>';
         content += '<td>' + patient['last_name'] + '</td>';
         content += '<td>' + patient['phone'] + '</td>';
-        content += '<td><button class="btn btn-info" onclick="location.href=\'view_patient.html?id=' + id + '\';">View</button></td>';
+        content += '<td><button class="btn btn-info" onclick="location.href=\'view_patient.html?id=' + id + '\';">' + STRINGS.view + '</button></td>';
         content += '</tr>\n';
         ++i;
     }

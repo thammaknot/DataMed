@@ -13,43 +13,43 @@
                         <a class="navbar-brand" href="#">DataMed</a>
                     </div>
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="doctor.html">Doctor</a></li>
-                        <li><a href="report.html">Reports</a></li>
-                        <li><a href="prescriptions.html">Prescriptions</a></li>
-                        <li><a href="treatments.html">Treatments</a></li>
+                        <li class="active"><a href="doctor.html">แพทย์</a></li>
+                        <li><a href="report.html">รายงานประจำวัน</a></li>
+                        <li><a href="prescriptions.html">ข้อมูลยา</a></li>
+                        <li><a href="treatments.html">ข้อมูลกายภาพบำบัด</a></li>
                     </ul>
                 </div>
             </nav>
             <div class="row">
                 <div class="col-md-7">
                     <div>
-                        <h2>Patient Info</h2>
+                        <h2>ข้อมูลคนไข้</h2>
                     </div>
                     <div id="patient_info_panel"></div>
                     <div id="visit_panel"></div>
                 </div>
                 <div class="col-md-5">
                     <ul class="nav nav-tabs">
-                        <li><a data-toggle="tab" href="#visits">Past Visits</a></li>
-                        <li class="active"><a data-toggle="tab" href="#queuePanel">Queue</a></li>
-                        <li><a data-toggle="tab" href="#treatmentQueuePanel">Treatment Queue</a></li>
+                        <li><a data-toggle="tab" href="#visits">ประวัติการรักษา</a></li>
+                        <li class="active"><a data-toggle="tab" href="#queuePanel">คิว</a></li>
+                        <li><a data-toggle="tab" href="#treatmentQueuePanel">คิวกายภาพบำบัด</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="visits" class="tab-pane fade">
                             <div id="past_visits_header">
-                                <h2>Past Visits</h2>
+                                <h2>ประวัติการรักษา</h2>
                             </div>
                             <div id="past_visits">
                             </div>
                         </div>
 
                         <div id="treatmentQueuePanel" class="tab-pane fade">
-                            <div><h2>Treatment Queue</h2></div>
+                            <div><h2>คิวกายภาพบำบัด</h2></div>
                             <div id="treatment_queue"></div>
                         </div>
 
                         <div id="queuePanel" class="tab-pane fade in active">
-                            <div><h2>Queue</h2></div>
+                            <div><h2>คิว</h2></div>
                             <div id="queue"></div>
                         </div>
                     </div>
@@ -76,6 +76,7 @@
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="js/keys.js"></script>
+        <script src="js/strings.js"></script>
         <script src="js/common.js"></script>
         <script src="js/visits.js"></script>
         <script src="js/datamed.js"></script>

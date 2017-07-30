@@ -116,7 +116,7 @@ var renderCostValue = function(value) {
     var autoCostButton = $('<button>', { class: 'btn btn-success' });
     var autoIconSpan = $('<span>', { class: 'glyphicon glyphicon-flash' });
     autoCostButton.append(autoIconSpan);
-    autoCostButton.append(' Auto');
+    autoCostButton.append(' ' + STRINGS.auto_cost);
     autoCostButton.click(function() {
         var prescriptionPanel = $('#prescription_panel');
         var treatmentPanel = $('#treatment_panel');
@@ -162,7 +162,7 @@ var renderPrescriptionValue = function(value) {
     var addButton = $('<button>', { class: 'btn btn-primary' });
     var addIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
     addButton.append(addIconSpan);
-    addButton.append(' Add prescription');
+    addButton.append(' ' + STRINGS.add_prescription);
     addButton.click(function() {
         addNewPrescription();
     });
@@ -271,7 +271,7 @@ var renderTreatmentValue = function(value) {
     var addButton = $('<button>', { class: 'btn btn-primary' });
     var addIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
     addButton.append(addIconSpan);
-    addButton.append(' Add treatment');
+    addButton.append(' ' + STRINGS.add_treatment);
     addButton.click(function() {
         addNewTreatment();
     });
@@ -353,7 +353,7 @@ var renderDrugUsage = function(value, elementId) {
     var textField = $('<input>', { class: 'form-control', id: elementId, value: value });
 
     var select = $('<select>', { class: 'form-control', id: 'drugUsageSelect' });
-    var noneOption = $('<option>', { value: 'none' }).text('Select...');
+    var noneOption = $('<option>', { value: 'none' }).text(STRINGS.select);
     noneOption.prop('selected', true);
     select.append(noneOption);
     for (var i = 0; i < prescriptionUsages.length; ++i) {
