@@ -59,6 +59,16 @@ var prescriptionKeys = {
                'size': 30 },
     'unit_price' : { 'display' : 'Unit price',
                      'type': 'number' },
+    'default_quantity' : { 'display' : 'Default quantity',
+                           'type' : 'number' },
+    'default_usage' : { 'display' : 'Default usage',
+                        'type' : 'usage' },
+    'usage_mode' : { 'display' : 'How to use',
+                     'type' : 'options',
+                     'options': {
+                         'eat' : { 'display' : 'Take orally' },
+                         'apply' : { 'display' : 'Apply externally' }
+                     }},
 };
 
 var treatmentKeys = {
@@ -67,4 +77,23 @@ var treatmentKeys = {
                'size': 30 },
     'unit_price' : { 'display' : 'Unit price',
                      'type': 'number' },
+    'default_quantity' : { 'display' : 'Default quantity',
+                           'type' : 'number' },
 };
+
+var prescriptionUsages = ['ครั้งละ 1 เม็ด 3 ครั้ง หลังอาหาร',
+                          'ครั้งละ 1 เม็ด 2 ครั้ง หลังอาหาร เช้า เย็น',
+                          'ครั้งละ 1 เม็ด 1 ครั้ง หลังอาหาร เช้า',
+                          'ครั้งละ 1 เม็ด 1 ครั้ง หลังอาหาร เย็น',
+                          'ครั้งละ 1 เม็ด 4 ครั้ง หลังอาหาร และ ก่อนนอน',
+                          'ครั้งละ 1 เม็ด 1 ครั้ง ก่อนนอน',
+                          'ครั้งละ 1 เม็ด 3 ครั้ง ก่อนอาหาร',
+                          'ครั้งละ 1 เม็ด 2 ครั้ง ก่อนอาหาร เช้า เย็น',
+                          'ครั้งละ 1 เม็ด 1 ครั้ง ก่อนอาหาร เช้า',
+                          'ครั้งละ 1 เม็ด 1 ครั้ง ก่อนอาหาร เย็น',
+                          'ครั้งละ 1 เม็ด 4 ครั้ง ก่อนอาหาร และ ก่อนนอน',
+                          'ครั้งละ 2 เม็ด เมื่อปวด วันละไม่เกิน 2 ครั้ง',
+                          'ครั้งละ 2 เม็ด เมื่อปวด วันละไม่เกิน 3 ครั้ง',
+                          'ครั้งละ 2 เม็ด เมื่อปวด วันละไม่เกิน 4 ครั้ง',
+                          'ครั้งละ 2 เม็ด เมื่อปวด วันละไม่เกิน 5 ครั้ง',
+                          'ครั้งละ 2 เม็ด เมื่อปวด วันละไม่เกิน 6 ครั้ง'];

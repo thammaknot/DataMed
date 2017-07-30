@@ -7,7 +7,7 @@ var renderPrescriptions = function() {
             var outerForm = $('<form>', { class: 'form-horizontal' });
             for (var key in prescriptions) {
                 var info = prescriptions[key];
-                var panel = $('<div>', { class: 'panel panel-primary' });
+                var panel = $('<div>', { class: 'panel panel-primary', id: key });
                 var body = $('<div>', { class: 'panel-body' });
                 for (var fieldKey in prescriptionKeys) {
                     var field = renderField(fieldKey, prescriptionKeys[fieldKey], info[fieldKey]);
@@ -25,6 +25,7 @@ var renderPrescriptions = function() {
                                      class: 'btn btn-success',
                                      id: 'save_prescription_button'});
     saveButton.click(function() {
+        print('Save button clicked!');
         savePrescriptions();
     });
     var newPrescriptionButton = $('<button>', { text: 'New',
@@ -53,16 +54,15 @@ var newPrescription = function() {
 
 var savePrescriptions = function() {
     var map = {};
-    $('#prescription_list').children('div').each(function() {
+    $('#prescription_list').children('form').children('div').each(function() {
         var prescriptionId = $(this).attr('id');
         var info = {};
-        var allInputFields = $(this).find('input').each(
-            function() {
-                var fieldKey = $(this).attr('id').substring(5);
-                var fieldValue = $(this).val();
-                info[fieldKey] = fieldValue;
+        for (var key in prescriptionKeys) {
+            var value = $(this).find('#edit_' + key).val();
+            if (value) {
+                info[key] = value;
             }
-        );
+        }
         map[prescriptionId] = info;
     });
     firebase.database().ref('prescriptions/').update(map);
