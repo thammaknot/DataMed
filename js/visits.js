@@ -181,6 +181,12 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
         doneButton.append(doneIconSpan);
         doneButton.append(' ' + STRINGS.finish);
         doneButton.click(function() {
+            var cost = $('#edit_cost').val();
+            print('cost = ' + cost);
+            if (!cost) {
+                var ok = confirm(STRINGS.cost_is_zero);
+                if (!ok) { return; }
+            }
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
             dequeue(queueKey);
             addToPostQueue(queueKey, queueInfo);
