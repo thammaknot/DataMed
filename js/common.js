@@ -393,3 +393,8 @@ var onQueuingComplete = function(error, idToEmpty) {
         $('#' + idToEmpty).empty();
     }
 };
+
+var getGlyph = function(name) {
+    var span = $('<span>', { class: 'glyphicon glyphicon-' + name });
+    return span;
+};

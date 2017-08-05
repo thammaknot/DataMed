@@ -9,6 +9,7 @@ var STRINGS = {
     new_visit: 'หาหมอวันนี้',
     doctor_queue: 'เข้าคิวพบแพทย์',
     delete: 'ลบ',
+    new_image: 'เพิ่มภาพใหม่',
     finish: 'เสร็จสิ้นการตรวจ',
     add_prescription: 'เพิ่มยา',
     add_treatment: 'เพิ่มกายภาพบำบัด',
@@ -19,6 +20,8 @@ var STRINGS = {
     cannot_queue_patient: 'ข้อมูลคนใข้ไม่ถูกต้อง ไม่สามารถเข้าคิวได้',
     patient_not_found: 'ไม่พบคนไข้',
     cost_is_zero: 'ค่ารักษาพยาบาล 0 บาท ดำเนินการต่อไหม?',
+    remove_image: 'ลบรูปนี้ออกจากระบบ?',
+    please_select_image_file: 'โปรดเลือกไฟล์รูปภาพจากเครื่อง',
     patient: 'คนใข้',
     patient_unit: 'คน',
     total_revenue: 'รายได้รวม',
@@ -33,4 +36,6 @@ var STRINGS = {
     update_succeeded: 'บันทึกข้อมูลเรียบร้อย',
     queuing_failed: 'เข้าคิวไม่สำเร็จ',
     queuing_succeeded: 'เข้าคิวเรียบร้อย',
+    new_image_title: 'ภาพใหม่',
+    browse_file: 'เลือกไฟล์',
 };

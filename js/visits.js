@@ -47,15 +47,15 @@ var renderNewVisit = function(userId, dateString) {
     }
 
     var updateButton = $('<button>', { class: 'btn btn-info', type: 'button' });
-    var updateIconSpan = $('<span>', { class: 'glyphicon glyphicon-floppy-disk' });
+    var updateIconSpan = getGlyph('floppy-disk');
     updateButton.append(updateIconSpan);
     updateButton.append(' ' + STRINGS.save);
     var queueButton = $('<button>', { class: 'btn btn-primary', type: 'button' });
-    var queueIconSpan = $('<span>', { class: 'glyphicon glyphicon-th-list' });
+    var queueIconSpan = getGlyph('th-list');
     queueButton.append(queueIconSpan);
     queueButton.append(' ' + STRINGS.doctor_queue);
     var deleteButton = $('<button>', { class: 'btn btn-danger', type: 'button' });
-    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
+    var deleteIconSpan = getGlyph('remove');
     deleteButton.append(deleteIconSpan);
     deleteButton.append(' ' + STRINGS.delete);
 
