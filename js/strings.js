@@ -28,4 +28,9 @@ var STRINGS = {
     new_treatment: 'เพิ่มชนิดกายภาพบำบัด',
     have_you_received_payment1: 'ได้รับเงิน',
     have_you_received_payment2: 'จากคนใข้แล้วใช่ไหม?',
+    no_results: 'ไม่พบคนไข้',
+    update_failed: 'บันทึกข้อมูลไม่สำเร็จ',
+    update_succeeded: 'บันทึกข้อมูลเรียบร้อย',
+    queuing_failed: 'เข้าคิวไม่สำเร็จ',
+    queuing_succeeded: 'เข้าคิวเรียบร้อย',
 };

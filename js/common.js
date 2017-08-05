@@ -372,3 +372,25 @@ var renderDrugUsage = function(value, elementId) {
     outputDiv.append(select);
     return outputDiv;
 };
+
+var onUpdateComplete = function(error) {
+    print('### onUpdateComplete called: ' + error);
+    if (error) {
+        $.notify(STRINGS.update_failed, { position: 'bottom left',
+                                          className: 'error' });
+    } else {
+        $.notify(STRINGS.update_succeeded, { position: 'bottom left',
+                                             className: 'success' });
+    }
+};
+
+var onQueuingComplete = function(error, idToEmpty) {
+    if (error) {
+        $.notify(STRINGS.queuing_failed, { position: 'bottom left',
+                                           className: 'error' });
+    } else {
+        $.notify(STRINGS.queuing_succeeded, { position: 'bottom left',
+                                              className: 'success' });
+        $('#' + idToEmpty).empty();
+    }
+};

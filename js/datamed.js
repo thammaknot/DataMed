@@ -96,8 +96,9 @@ var queuePatient = function(userId, visitId) {
         time: Date.now(),
         patient: currentPatient,
         visit: currentVisit,
+    }, function(error) {
+        onQueuingComplete(error, 'new_visit');
     });
-    $('#new_visit').empty();
 };
 
 var createNewVisit = function(id) {
@@ -126,7 +127,7 @@ var savePatientInfo = function(id) {
         }
     }
     currentPatient = info;
-    firebase.database().ref('patients/' + id).update(info);
+    firebase.database().ref('patients/' + id).update(info, onUpdateComplete);
 };
 
 var getParameterByName = function(url, name) {
@@ -145,6 +146,10 @@ var renderResults = function(results) {
     var content = '<table class="table">'
     content += '<thead><tr><th>' + STRINGS.order + '</th><th>' + STRINGS.first_name + '</th><th>' + STRINGS.last_name + '</th><th>' + STRINGS.phone_number + '</th></tr></thead>\n';
     var i = 1;
+    if (!results || jQuery.isEmptyObject(results)) {
+        $.notify(STRINGS.no_results, { position: 'bottom left', className: 'warn' });
+        return;
+    }
     for (var id in results) {
         var patient = results[id];
         content += '<tr>';

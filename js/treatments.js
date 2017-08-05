@@ -63,6 +63,5 @@ var saveTreatments = function() {
         }
         map[treatmentId] = info;
     });
-    print(map);
-    firebase.database().ref('treatments/').update(map);
+    firebase.database().ref('treatments/').update(map, onUpdateComplete);
 }

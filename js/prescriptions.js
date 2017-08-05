@@ -63,5 +63,6 @@ var savePrescriptions = function() {
         }
         map[prescriptionId] = info;
     });
-    firebase.database().ref('prescriptions/').update(map);
+    print('>>>> saving prescription!!!');
+    firebase.database().ref('prescriptions/').update(map, onUpdateComplete);
 }

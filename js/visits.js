@@ -18,7 +18,7 @@ var updateVisit = function(userId, visitId, queueKey) {
             }
         }
     }
-    firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(currentVisit);
+    var ok = firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(currentVisit, onUpdateComplete);
     if (queueKey) {
         firebase.database().ref('queue/' + queueKey + '/visit').update(currentVisit);
     }
@@ -189,7 +189,6 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
             updateVisit(queueInfo.patientId, queueInfo.visitId, queueKey);
             dequeue(queueKey);
             addToPostQueue(queueKey, queueInfo);
-            $('#visit_panel').empty();
         });
         body.append(doneButton);
     }
@@ -209,10 +208,13 @@ var addNewTreatment = function() {
 var addToPostQueue = function(queueKey, queueInfo) {
     var visit = queueInfo.visit;
     print(visit.treatments);
+    var onComplete = function(error) {
+        onQueuingComplete(error, 'visit_panel');
+    };
     if (visit.treatments && !jQuery.isEmptyObject(visit.treatments)) {
-        firebase.database().ref('treatment-queue/' + queueKey).update(queueInfo);
+        firebase.database().ref('treatment-queue/' + queueKey).update(queueInfo, onComplete);
     } else {
-        firebase.database().ref('payment-queue/' + queueKey).update(queueInfo);
+        firebase.database().ref('payment-queue/' + queueKey).update(queueInfo, onComplete);
     }
 };
 
