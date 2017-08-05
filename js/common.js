@@ -374,7 +374,6 @@ var renderDrugUsage = function(value, elementId) {
 };
 
 var onUpdateComplete = function(error) {
-    print('### onUpdateComplete called: ' + error);
     if (error) {
         $.notify(STRINGS.update_failed, { position: 'bottom left',
                                           className: 'error' });
