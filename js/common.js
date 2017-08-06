@@ -92,6 +92,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
         }
     } else if (type == 'usage') {
         element = renderDrugUsage(value, elementId);
+    } else if (type == 'images') {
+        element = renderImagePanel(value, elementId);
     }
     wrapperDiv.append(element);
     return wrapperDiv;
@@ -236,9 +238,8 @@ var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
         usageField.attr('value', defaultUsageValue);
     }
     var deleteButton = $('<button>', { class: 'btn btn-danger' });
-    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
-    deleteButton.append(deleteIconSpan);
-    deleteButton.append(' Delete');
+    deleteButton.append(getGlyph('remove'));
+    deleteButton.append(' ' + STRINGS.delete);
     deleteButton.click(function(rowToDelete) {
         return function() {
             rowToDelete.remove();
@@ -371,6 +372,69 @@ var renderDrugUsage = function(value, elementId) {
     outputDiv.append(textField);
     outputDiv.append(select);
     return outputDiv;
+};
+
+/**
+ * value: { image_id: <id>, drawing: [{color: <c>, x: <x>, y: <y>, size: <s>}, {...}, {...}] }
+ */
+var renderImagePanel = function(value, elementId) {
+    var outputDiv = $('<div>');
+    var addImageButton = $('<button>', { class: 'btn btn-primary' });
+    addImageButton.append(getGlyph('picture'), ' ' + STRINGS.add_image);
+    addImageButton.click(function() {
+        var newImageDiv = $('<div>');
+        var selectImage = $('<select>', { class: 'form-control' });
+        var defaultOption = $('<option>', { value: '', text: STRINGS.select });
+        selectImage.append(defaultOption);
+        firebase.database().ref('images/templates/')
+            .on('value', function(data) {
+                print(data);
+                var images = data.val();
+                if (!images) { return; }
+                for (var key in images) {
+                    var info = images[key];
+                    var option = $('<option>', { value: info.url,
+                                                 text: info.name });
+                    selectImage.append(option);
+                }
+            });
+        var image = $('<img>');
+        selectImage.change(function() {
+            var url = $(this).find('option:selected')[0].value;
+            image.attr('src', url).width(250);
+            image.click(function() {
+                showImagePopup(url);
+            });
+        });
+        var deleteButton = $('<button>', { class: 'btn btn-danger' });
+        deleteButton.append(getGlyph('remove'), ' ' + STRINGS.delete);
+        deleteButton.click(function() {
+            newImageDiv.remove();
+        });
+        newImageDiv.append(selectImage, image, deleteButton);
+        outputDiv.append(newImageDiv);
+    });
+    outputDiv.append(addImageButton);
+    return outputDiv;
+};
+
+var showImagePopup = function(url) {
+    var popup = $('<div>' , { class: 'modal fade' });
+    var dialog = $('<div>', { class: 'modal-dialog' });
+    var content = $('<div>', { class: 'modal-content' });
+
+    var header = $('<div>', { class: 'modal-header' });
+    header.append(STRINGS.image_title);
+
+    var body = $('<div>', { class: 'modal-body' });
+    var image = $('<img>').width(500);
+    image.attr('src', url);
+    body.append(image);
+
+    dialog.append(content);
+    content.append([header, body]);
+    popup.append(dialog);
+    popup.modal('show');
 };
 
 var onDeletionComplete = function(error) {

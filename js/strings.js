@@ -13,6 +13,7 @@ var STRINGS = {
     finish: 'เสร็จสิ้นการตรวจ',
     add_prescription: 'เพิ่มยา',
     add_treatment: 'เพิ่มกายภาพบำบัด',
+    add_image: 'เพิ่มรูปภาพ',
     auto_cost: 'คำนวนค่ารักษา',
     pick_report_date: 'เลือกวันที่จะดูรายงาน',
     enter_first_and_last_names: 'โปรดกรอกชื่อและนามสกุลให้ครบ',
@@ -40,5 +41,6 @@ var STRINGS = {
     deletion_failed: 'ลบข้อมูลไม่สำเร็จ',
     deletion_succeeded: 'ลบข้อมูลเรียบร้อย',
     new_image_title: 'ภาพใหม่',
+    image_title: 'ภาพร่างกาย',
     browse_file: 'เลือกไฟล์',
 };

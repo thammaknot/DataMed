@@ -139,7 +139,6 @@ var displayFullVisit = function(queueKey, info) {
         var subDiv = $('<tr>', { class: 'row' });
         subDiv.append(label);
         subDiv.append(value);
-        // patientDiv.append(subDiv);
         patientInfoTable.append(subDiv);
     }
     patientDiv.append(patientInfoTable);

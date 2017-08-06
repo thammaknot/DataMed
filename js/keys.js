@@ -41,6 +41,8 @@ var visitKeys = {
                   'type': 'text' },
     'diagnosis': { 'display': 'ผลวินิจฉัย',
                    'type': 'text' },
+    'images': { 'display': 'ภาพประกอบการรักษา',
+                'type': 'images' },
     'prescriptions': { 'display': 'ยา',
                        'type': 'prescriptions' },
     'treatments': { 'display': 'กายภาพบำบัด',
