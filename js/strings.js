@@ -22,6 +22,7 @@ var STRINGS = {
     cost_is_zero: 'ค่ารักษาพยาบาล 0 บาท ดำเนินการต่อไหม?',
     remove_image: 'ลบรูปนี้ออกจากระบบ?',
     please_select_image_file: 'โปรดเลือกไฟล์รูปภาพจากเครื่อง',
+    please_enter_image_name: 'โปรดกำหนดชื่อภาพนี้',
     patient: 'คนใข้',
     patient_unit: 'คน',
     total_revenue: 'รายได้รวม',
@@ -36,6 +37,8 @@ var STRINGS = {
     update_succeeded: 'บันทึกข้อมูลเรียบร้อย',
     queuing_failed: 'เข้าคิวไม่สำเร็จ',
     queuing_succeeded: 'เข้าคิวเรียบร้อย',
+    deletion_failed: 'ลบข้อมูลไม่สำเร็จ',
+    deletion_succeeded: 'ลบข้อมูลเรียบร้อย',
     new_image_title: 'ภาพใหม่',
     browse_file: 'เลือกไฟล์',
 };

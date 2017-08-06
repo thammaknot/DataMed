@@ -373,6 +373,16 @@ var renderDrugUsage = function(value, elementId) {
     return outputDiv;
 };
 
+var onDeletionComplete = function(error) {
+    if (error) {
+        $.notify(STRINGS.deletion_failed, { position: 'bottom left',
+                                            className: 'error' });
+    } else {
+        $.notify(STRINGS.deletion_succeeded, { position: 'bottom left',
+                                               className: 'success' });
+    }
+};
+
 var onUpdateComplete = function(error) {
     if (error) {
         $.notify(STRINGS.update_failed, { position: 'bottom left',
