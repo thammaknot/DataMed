@@ -427,14 +427,104 @@ var showImagePopup = function(url) {
     header.append(STRINGS.image_title);
 
     var body = $('<div>', { class: 'modal-body' });
-    var image = $('<img>').width(500);
-    image.attr('src', url);
-    body.append(image);
+    var canvas = $('<canvas>', { id: 'canvas' });
+    canvas[0].width = 500;
+    canvas[0].height = 500;
+
+    setupCanvas(canvas);
+
+    var image = new Image();
+    image.src = url;
+
+    // var image = $('<img>').width(500);
+    // image.attr('src', url);
+    // body.append(image);
+
+    body.append(canvas);
 
     dialog.append(content);
     content.append([header, body]);
     popup.append(dialog);
     popup.modal('show');
+};
+
+var setupCanvas = function(canvas) {
+    print('Setting up canvas!');
+    context = canvas[0].getContext('2d');
+    print(context);
+
+    context.strokeStyle = "#df4b26";
+    context.lineJoin = "round";
+    context.lineWidth = 1;
+
+    canvas.mousedown(function(e) {
+        var box = this.getBoundingClientRect();
+        var mouseX = e.clientX - box.left;
+        var mouseY = e.clientY - box.top;
+
+        paint = true;
+        addClick(mouseX, mouseY);
+        redraw();
+    });
+
+    canvas.mousemove(function(e) {
+        if (paint) {
+            var box = this.getBoundingClientRect();
+            var mouseX = e.clientX - box.left;
+            var mouseY = e.clientY - box.top;
+            addClick(mouseX, mouseY, true);
+            redraw();
+        }
+    });
+
+    canvas.mouseup(function(e){
+        paint = false;
+    });
+
+    canvas.mouseleave(function(e){
+        paint = false;
+    });
+};
+
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+var context;
+
+var addClick = function(x, y, dragging) {
+    clickX.push(x);
+    clickY.push(y);
+    clickDrag.push(dragging);
+};
+
+var redraw = function() {
+    // print('Inside redraw!!!!!>>>>');
+    context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
+
+    context.strokeStyle = "#df4b26";
+    context.lineJoin = "round";
+    context.lineWidth = 5;
+
+    // print('clickX length: ' + clickX.length);
+    for (var i = 0; i < clickX.length; i++) {
+        // print('i = ' + i + ' | ' + clickX[i] + ',' + clickY[i]);
+        context.beginPath();
+        if (clickDrag[i] && i) {
+            // print('Drawing from (' + clickX[i-1] + ',' + clickY[i-1] + ')');
+            context.moveTo(clickX[i-1], clickY[i-1]);
+        } else {
+            // print('Drawing from (' + (clickX[i] - 1) + ',' + clickY[i] + ')');
+            context.moveTo(clickX[i] - 1, clickY[i]);
+        }
+        // print(' To >> (' + clickX[i] + ',' + clickY[i] + ')');
+        context.lineTo(clickX[i], clickY[i]);
+        context.closePath();
+        context.stroke();
+    }
+    context.moveTo(0,0);
+    context.lineTo(100, 100);
+    context.stroke();
 };
 
 var onDeletionComplete = function(error) {
