@@ -1,3 +1,9 @@
+var clickX = new Array();
+var clickY = new Array();
+var clickDrag = new Array();
+var paint;
+var context;
+
 var print = function(s) {
     console.log(s);
 };
@@ -431,14 +437,7 @@ var showImagePopup = function(url) {
     canvas[0].width = 500;
     canvas[0].height = 500;
 
-    setupCanvas(canvas);
-
-    var image = new Image();
-    image.src = url;
-
-    // var image = $('<img>').width(500);
-    // image.attr('src', url);
-    // body.append(image);
+    setupCanvas(canvas, url);
 
     body.append(canvas);
 
@@ -448,14 +447,15 @@ var showImagePopup = function(url) {
     popup.modal('show');
 };
 
-var setupCanvas = function(canvas) {
-    print('Setting up canvas!');
+var setupCanvas = function(canvas, url) {
     context = canvas[0].getContext('2d');
-    print(context);
+    clickX = new Array();
+    clickY = new Array();
+    clickDrag = new Array();
 
-    context.strokeStyle = "#df4b26";
-    context.lineJoin = "round";
-    context.lineWidth = 1;
+    var image = new Image();
+    image.src = url;
+    context.drawImage(image, 0, 0, 500, 500);
 
     canvas.mousedown(function(e) {
         var box = this.getBoundingClientRect();
@@ -486,12 +486,6 @@ var setupCanvas = function(canvas) {
     });
 };
 
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
-var context;
-
 var addClick = function(x, y, dragging) {
     clickX.push(x);
     clickY.push(y);
@@ -499,32 +493,23 @@ var addClick = function(x, y, dragging) {
 };
 
 var redraw = function() {
-    // print('Inside redraw!!!!!>>>>');
     context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
 
     context.strokeStyle = "#df4b26";
     context.lineJoin = "round";
     context.lineWidth = 5;
 
-    // print('clickX length: ' + clickX.length);
     for (var i = 0; i < clickX.length; i++) {
-        // print('i = ' + i + ' | ' + clickX[i] + ',' + clickY[i]);
         context.beginPath();
         if (clickDrag[i] && i) {
-            // print('Drawing from (' + clickX[i-1] + ',' + clickY[i-1] + ')');
             context.moveTo(clickX[i-1], clickY[i-1]);
         } else {
-            // print('Drawing from (' + (clickX[i] - 1) + ',' + clickY[i] + ')');
             context.moveTo(clickX[i] - 1, clickY[i]);
         }
-        // print(' To >> (' + clickX[i] + ',' + clickY[i] + ')');
         context.lineTo(clickX[i], clickY[i]);
         context.closePath();
         context.stroke();
     }
-    context.moveTo(0,0);
-    context.lineTo(100, 100);
-    context.stroke();
 };
 
 var onDeletionComplete = function(error) {
