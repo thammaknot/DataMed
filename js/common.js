@@ -410,9 +410,12 @@ var renderImagePanel = function(value, elementId) {
                 imageInfo[index] = {
                     image_id: index,
                     url: url,
+                    clickX: [],
+                    clickY: [],
+                    clickDrag: [],
+                    penColors: [],
+                    penSizes: [],
                 };
-                print('New image: ');
-                print(imageInfo[index]);
                 image.click(function() {
                     showImagePopup(url, index);
                 });
