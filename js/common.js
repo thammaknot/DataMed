@@ -106,6 +106,9 @@ var getFieldValue = function(element) {
         output = element.val();
     } else if (type == 'select') {
         output = element.val();
+    } else if (type == 'images') {
+        print('Getting field value of ' );
+        print(element);
     }
     return output;
 };
@@ -380,7 +383,8 @@ var renderDrugUsage = function(value, elementId) {
  *        { image_id: ... }] }
  */
 var renderImagePanel = function(value, elementId) {
-    var outputDiv = $('<div>');
+    var outputDiv = $('<div>', { id: elementId });
+    print(outputDiv);
     var addImageButton = $('<button>', { class: 'btn btn-primary' });
     addImageButton.append(getGlyph('picture'), ' ' + STRINGS.add_image);
     var imageIndex = 0;
@@ -402,41 +406,15 @@ var renderImagePanel = function(value, elementId) {
                 }
             });
         var thumbnailCanvas = $('<canvas>', { id: 'thumb_canvas_' + imageIndex});
-        /*
-        thumbnailCanvas[0].width = 250;
-        thumbnailCanvas[0].height = 250;
-        var context = thumbnailCanvas[0].getContext('2d');
-        context.strokeStyle = 'red';
-        context.lineWidth = 3;
-        context.moveTo(0,0);
-        context.lineTo(100,50);
-        context.stroke();
-        var img = new Image();
-        img.src = 'https://johnlewis.scene7.com/is/image/JohnLewis/236609672?$prod_main$';
-        img.onload = function() {
-            context.drawImage(img, 0, 0, 250, 250);
-        };
-        */
-
-        var image = $('<img>');
         selectImage.change(function(index) {
             return function() {
                 var option = $(this).find('option:selected')[0];
                 var url = option.value;
-                image.attr('src', url).width(250);
                 imageInfo[index] = {
                     image_id: index,
                     url: url,
-                    clickX: [],
-                    clickY: [],
-                    clickDrag: [],
-                    penColors: [],
-                    penSizes: [],
+                    drawing: {}
                 };
-                image.click(function() {
-                    showImagePopup(url, index);
-                });
-                print('Setting up thmb canvas!');
                 setupCanvas(thumbnailCanvas, url, imageInfo[index].drawing,
                             thumbnailCanvasWidth, thumbnailCanvasHeight, false);
                 thumbnailCanvas.click(function() {
@@ -453,7 +431,7 @@ var renderImagePanel = function(value, elementId) {
             };
         }(imageIndex));
         ++imageIndex;
-        newImageDiv.append(selectImage, image, thumbnailCanvas, deleteButton);
+        newImageDiv.append(selectImage, thumbnailCanvas, deleteButton);
         outputDiv.append(newImageDiv);
     });
     outputDiv.append(addImageButton);
@@ -468,7 +446,6 @@ var renderImagePanel = function(value, elementId) {
 var imageInfo = [];
 
 var showImagePopup = function(url, index) {
-    print('SIP called: ' + url + ',' + index);
     var popup = $('<div>' , { class: 'modal fade' });
     var dialog = $('<div>', { class: 'modal-dialog' });
     var content = $('<div>', { class: 'modal-content' });
@@ -491,7 +468,6 @@ var showImagePopup = function(url, index) {
     // On modal closed.
     popup.on('hidden.bs.modal', function() {
         drawing = getCurrentDrawing();
-        print('Saving drawing####'); print(drawing);
         imageInfo[index].drawing = drawing;
         imageInfo[index].image_id = index;
         imageInfo[index].url = url;

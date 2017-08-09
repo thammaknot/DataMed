@@ -11,6 +11,12 @@ var updateVisit = function(userId, visitId, queueKey) {
         if (key == 'prescriptions' || key == 'treatments') {
             var prefix = (key == 'prescriptions' ? 'prescription' : 'treatment');
             currentVisit[key] = getCurrentPrescriptionOrTreatment(prefix);
+        } else if (key == 'images') {
+            print('Saving images');
+            print(imageInfo);
+            if (imageInfo.length > 0) {
+                currentVisit[key] = imageInfo;
+            }
         } else {
             var value = $('#edit_' + key).val();
             if (value) {
@@ -22,6 +28,8 @@ var updateVisit = function(userId, visitId, queueKey) {
     if (queueKey) {
         firebase.database().ref('queue/' + queueKey + '/visit').update(currentVisit);
     }
+    print('Saving...');
+    print(currentVisit);
 };
 
 var deleteVisit = function(userId, visitId) {
