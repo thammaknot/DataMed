@@ -401,6 +401,23 @@ var renderImagePanel = function(value, elementId) {
                     selectImage.append(option);
                 }
             });
+        var thumbnailCanvas = $('<canvas>', { id: 'thumb_canvas_' + imageIndex});
+        /*
+        thumbnailCanvas[0].width = 250;
+        thumbnailCanvas[0].height = 250;
+        var context = thumbnailCanvas[0].getContext('2d');
+        context.strokeStyle = 'red';
+        context.lineWidth = 3;
+        context.moveTo(0,0);
+        context.lineTo(100,50);
+        context.stroke();
+        var img = new Image();
+        img.src = 'https://johnlewis.scene7.com/is/image/JohnLewis/236609672?$prod_main$';
+        img.onload = function() {
+            context.drawImage(img, 0, 0, 250, 250);
+        };
+        */
+
         var image = $('<img>');
         selectImage.change(function(index) {
             return function() {
@@ -419,6 +436,12 @@ var renderImagePanel = function(value, elementId) {
                 image.click(function() {
                     showImagePopup(url, index);
                 });
+                print('Setting up thmb canvas!');
+                setupCanvas(thumbnailCanvas, url, imageInfo[index].drawing,
+                            thumbnailCanvasWidth, thumbnailCanvasHeight, false);
+                thumbnailCanvas.click(function() {
+                    showImagePopup(url, index);
+                });
             };
         }(imageIndex));
         var deleteButton = $('<button>', { class: 'btn btn-danger' });
@@ -430,7 +453,7 @@ var renderImagePanel = function(value, elementId) {
             };
         }(imageIndex));
         ++imageIndex;
-        newImageDiv.append(selectImage, image, deleteButton);
+        newImageDiv.append(selectImage, image, thumbnailCanvas, deleteButton);
         outputDiv.append(newImageDiv);
     });
     outputDiv.append(addImageButton);
@@ -454,11 +477,10 @@ var showImagePopup = function(url, index) {
     header.append(STRINGS.image_title);
 
     var body = $('<div>', { class: 'modal-body' });
-    var canvas = $('<canvas>', { id: 'canvas' });
-    canvas[0].width = canvasWidth;
-    canvas[0].height = canvasHeight;
+    var canvas = $('<canvas>', { id: 'popup_canvas' });
 
-    setupCanvas(canvas, url, imageInfo[index]);
+    setupCanvas(canvas, url, imageInfo[index].drawing,
+                popupCanvasWidth, popupCanvasHeight, true);
     body.append(canvas);
 
     dialog.append(content);
@@ -469,11 +491,14 @@ var showImagePopup = function(url, index) {
     // On modal closed.
     popup.on('hidden.bs.modal', function() {
         drawing = getCurrentDrawing();
+        print('Saving drawing####'); print(drawing);
         imageInfo[index].drawing = drawing;
         imageInfo[index].image_id = index;
         imageInfo[index].url = url;
-        print('Drawing saved!!!!');
-        print(imageInfo);
+
+        // Refresh the thumb image.
+        var thumbCanvas = $('#thumb_canvas_' + index);
+        setupCanvas(thumbCanvas, url, imageInfo[index].drawing, thumbnailCanvasWidth, thumbnailCanvasHeight, false);
     });
 };
 
