@@ -1,9 +1,3 @@
-var clickX = new Array();
-var clickY = new Array();
-var clickDrag = new Array();
-var paint;
-var context;
-
 var print = function(s) {
     console.log(s);
 };
@@ -381,12 +375,15 @@ var renderDrugUsage = function(value, elementId) {
 };
 
 /**
- * value: { image_id: <id>, drawing: [{color: <c>, x: <x>, y: <y>, size: <s>}, {...}, {...}] }
+ * value: { image_id: <id>, drawing: { clickX: [], clickY: [], [], penColors: [], penSizes: [] }},
+ *        { image_id: ... },
+ *        { image_id: ... }] }
  */
 var renderImagePanel = function(value, elementId) {
     var outputDiv = $('<div>');
     var addImageButton = $('<button>', { class: 'btn btn-primary' });
     addImageButton.append(getGlyph('picture'), ' ' + STRINGS.add_image);
+    var imageIndex = 0;
     addImageButton.click(function() {
         var newImageDiv = $('<div>');
         var selectImage = $('<select>', { class: 'form-control' });
@@ -405,18 +402,31 @@ var renderImagePanel = function(value, elementId) {
                 }
             });
         var image = $('<img>');
-        selectImage.change(function() {
-            var url = $(this).find('option:selected')[0].value;
-            image.attr('src', url).width(250);
-            image.click(function() {
-                showImagePopup(url);
-            });
-        });
+        selectImage.change(function(index) {
+            return function() {
+                var option = $(this).find('option:selected')[0];
+                var url = option.value;
+                image.attr('src', url).width(250);
+                imageInfo[index] = {
+                    image_id: index,
+                    url: url,
+                };
+                print('New image: ');
+                print(imageInfo[index]);
+                image.click(function() {
+                    showImagePopup(url, index);
+                });
+            };
+        }(imageIndex));
         var deleteButton = $('<button>', { class: 'btn btn-danger' });
         deleteButton.append(getGlyph('remove'), ' ' + STRINGS.delete);
-        deleteButton.click(function() {
-            newImageDiv.remove();
-        });
+        deleteButton.click(function(index) {
+            return function() {
+                imageInfo.splice(index, 1);
+                newImageDiv.remove();
+            };
+        }(imageIndex));
+        ++imageIndex;
         newImageDiv.append(selectImage, image, deleteButton);
         outputDiv.append(newImageDiv);
     });
@@ -424,7 +434,15 @@ var renderImagePanel = function(value, elementId) {
     return outputDiv;
 };
 
-var showImagePopup = function(url) {
+// Each entry is
+// { id: <key>,
+//   url: <url>,
+//   drawing: <drawing obj>,
+// }
+var imageInfo = [];
+
+var showImagePopup = function(url, index) {
+    print('SIP called: ' + url + ',' + index);
     var popup = $('<div>' , { class: 'modal fade' });
     var dialog = $('<div>', { class: 'modal-dialog' });
     var content = $('<div>', { class: 'modal-content' });
@@ -434,82 +452,26 @@ var showImagePopup = function(url) {
 
     var body = $('<div>', { class: 'modal-body' });
     var canvas = $('<canvas>', { id: 'canvas' });
-    canvas[0].width = 500;
-    canvas[0].height = 500;
+    canvas[0].width = canvasWidth;
+    canvas[0].height = canvasHeight;
 
     setupCanvas(canvas, url);
-
     body.append(canvas);
 
     dialog.append(content);
     content.append([header, body]);
     popup.append(dialog);
     popup.modal('show');
-};
 
-var setupCanvas = function(canvas, url) {
-    context = canvas[0].getContext('2d');
-    clickX = new Array();
-    clickY = new Array();
-    clickDrag = new Array();
-
-    var image = new Image();
-    image.src = url;
-    context.drawImage(image, 0, 0, 500, 500);
-
-    canvas.mousedown(function(e) {
-        var box = this.getBoundingClientRect();
-        var mouseX = e.clientX - box.left;
-        var mouseY = e.clientY - box.top;
-
-        paint = true;
-        addClick(mouseX, mouseY);
-        redraw();
+    // On modal closed.
+    popup.on('hidden.bs.modal', function() {
+        drawing = getCurrentDrawing();
+        imageInfo[index].drawing = drawing;
+        imageInfo[index].image_id = index;
+        imageInfo[index].url = url;
+        print('Drawing saved!!!!');
+        print(imageInfo);
     });
-
-    canvas.mousemove(function(e) {
-        if (paint) {
-            var box = this.getBoundingClientRect();
-            var mouseX = e.clientX - box.left;
-            var mouseY = e.clientY - box.top;
-            addClick(mouseX, mouseY, true);
-            redraw();
-        }
-    });
-
-    canvas.mouseup(function(e){
-        paint = false;
-    });
-
-    canvas.mouseleave(function(e){
-        paint = false;
-    });
-};
-
-var addClick = function(x, y, dragging) {
-    clickX.push(x);
-    clickY.push(y);
-    clickDrag.push(dragging);
-};
-
-var redraw = function() {
-    context.clearRect(0, 0, context.canvas.width, context.canvas.height); // Clears the canvas
-
-    context.strokeStyle = "#df4b26";
-    context.lineJoin = "round";
-    context.lineWidth = 5;
-
-    for (var i = 0; i < clickX.length; i++) {
-        context.beginPath();
-        if (clickDrag[i] && i) {
-            context.moveTo(clickX[i-1], clickY[i-1]);
-        } else {
-            context.moveTo(clickX[i] - 1, clickY[i]);
-        }
-        context.lineTo(clickX[i], clickY[i]);
-        context.closePath();
-        context.stroke();
-    }
 };
 
 var onDeletionComplete = function(error) {
