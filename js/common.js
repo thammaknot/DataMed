@@ -378,16 +378,16 @@ var renderDrugUsage = function(value, elementId) {
 };
 
 /**
- * value: { image_id: <id>, drawing: { clickX: [], clickY: [], [], penColors: [], penSizes: [] }},
- *        { image_id: ... },
- *        { image_id: ... }] }
+ * value: { 0: { image_id: <id>, drawing: { clickX: [], clickY: [], [], penColors: [], penSizes: [] }},
+ *          1: { image_id: ... },
+ *          2: { image_id: ... }] }
  */
 var renderImagePanel = function(value, elementId) {
     var outputDiv = $('<div>', { id: elementId });
-    print(outputDiv);
     var addImageButton = $('<button>', { class: 'btn btn-primary' });
     addImageButton.append(getGlyph('picture'), ' ' + STRINGS.add_image);
-    var imageIndex = 0;
+    outputDiv.append(addImageButton);
+    var imageIndex = renderExistingImages(value, outputDiv);
     addImageButton.click(function() {
         var newImageDiv = $('<div>');
         var selectImage = $('<select>', { class: 'form-control' });
@@ -434,8 +434,72 @@ var renderImagePanel = function(value, elementId) {
         newImageDiv.append(selectImage, thumbnailCanvas, deleteButton);
         outputDiv.append(newImageDiv);
     });
-    outputDiv.append(addImageButton);
     return outputDiv;
+};
+
+var renderOneImageEntry = function(curImageInfo, index, url) {
+    var newImageDiv = $('<div>');
+    var selectImage = $('<select>', { id: 'select_image_' + index, class: 'form-control' });
+    var defaultOption = $('<option>', { value: '', text: STRINGS.select });
+    selectImage.append(defaultOption);
+    firebase.database().ref('images/templates/')
+        .on('value', function(data) {
+            var images = data.val();
+            if (!images) { return; }
+            for (var key in images) {
+                var info = images[key];
+                var option = $('<option>', { value: info.url,
+                                             text: info.name });
+                selectImage.append(option);
+            }
+        });
+    var thumbnailCanvas = $('<canvas>', { id: 'thumb_canvas_' + index});
+    if (curImageInfo) {
+        $('#select_image_' + index + ' option[value="' + url + '"]').prop('selected', true);
+        setupCanvas(thumbnailCanvas, url, curImageInfo.drawing,
+                    thumbnailCanvasWidth, thumbnailCanvasHeight, false);
+        thumbnailCanvas.click(function() {
+            showImagePopup(url, index);
+        });
+    }
+    selectImage.change(function() {
+            var option = $(this).find('option:selected')[0];
+            var url = option.value;
+            imageInfo[index] = {
+                image_id: index,
+                url: url,
+                drawing: {}
+            };
+            setupCanvas(thumbnailCanvas, url, imageInfo[index].drawing,
+                        thumbnailCanvasWidth, thumbnailCanvasHeight, false);
+            thumbnailCanvas.click(function() {
+                showImagePopup(url, index);
+            });
+        });
+    var deleteButton = $('<button>', { class: 'btn btn-danger' });
+    deleteButton.append(getGlyph('remove'), ' ' + STRINGS.delete);
+    deleteButton.click(function() {
+        imageInfo.splice(index, 1);
+        newImageDiv.remove();
+    });
+    newImageDiv.append(selectImage, thumbnailCanvas, deleteButton);
+    return newImageDiv;
+};
+
+var renderExistingImages = function(value, parentDiv) {
+    var count = 0;
+    imageInfo = [];
+    for (var id in value) {
+        if (!value.hasOwnProperty(id)) {
+            continue;
+        }
+        var image = value[id];
+        var newImageDiv = renderOneImageEntry(image, id, image.url);
+        imageInfo[count] = image;
+        parentDiv.append(newImageDiv);
+        ++count;
+    }
+    return count;
 };
 
 // Each entry is
