@@ -455,7 +455,7 @@ var showImagePopup = function(url, index) {
     canvas[0].width = canvasWidth;
     canvas[0].height = canvasHeight;
 
-    setupCanvas(canvas, url);
+    setupCanvas(canvas, url, imageInfo[index]);
     body.append(canvas);
 
     dialog.append(content);
