@@ -455,7 +455,6 @@ var renderOneImageEntry = function(curImageInfo, index, url) {
         setupCanvas(thumbnailCanvas, url, curImageInfo.drawing,
                     thumbnailCanvasWidth, thumbnailCanvasHeight, false);
         thumbnailCanvas.click(function() {
-            print('FIRST 1111111.......');
             showImagePopup(url, index);
         });
     }
@@ -471,7 +470,6 @@ var renderOneImageEntry = function(curImageInfo, index, url) {
                     thumbnailCanvasWidth, thumbnailCanvasHeight, false);
         thumbnailCanvas.unbind('click');
         thumbnailCanvas.click(function() {
-            print('SECUNDOOOOOOOO 2222222');
             showImagePopup(url, index);
         });
     });
