@@ -189,13 +189,10 @@ var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice)
     for (var key in prescriptionList) {
         var curMed = prescriptionList[key];
         var option = $('<option>', { value: key }).text(curMed.name);
-        print(curMed);
-        print('Med id = ' + key);
         if (curMed.name === selectedName || (unitPrice == -1)) {
             option.prop('selected', true);
             unitPrice = curMed.unit_price;
         }
-        print(option);
         menu.append(option);
     }
     if (storedUnitPrice) {
@@ -395,7 +392,6 @@ var renderImagePanel = function(value, elementId) {
         selectImage.append(defaultOption);
         firebase.database().ref('images/templates/')
             .on('value', function(data) {
-                print(data);
                 var images = data.val();
                 if (!images) { return; }
                 for (var key in images) {
@@ -459,23 +455,26 @@ var renderOneImageEntry = function(curImageInfo, index, url) {
         setupCanvas(thumbnailCanvas, url, curImageInfo.drawing,
                     thumbnailCanvasWidth, thumbnailCanvasHeight, false);
         thumbnailCanvas.click(function() {
+            print('FIRST 1111111.......');
             showImagePopup(url, index);
         });
     }
     selectImage.change(function() {
-            var option = $(this).find('option:selected')[0];
-            var url = option.value;
-            imageInfo[index] = {
-                image_id: index,
-                url: url,
-                drawing: {}
-            };
-            setupCanvas(thumbnailCanvas, url, imageInfo[index].drawing,
-                        thumbnailCanvasWidth, thumbnailCanvasHeight, false);
-            thumbnailCanvas.click(function() {
-                showImagePopup(url, index);
-            });
+        var option = $(this).find('option:selected')[0];
+        var url = option.value;
+        imageInfo[index] = {
+            image_id: index,
+            url: url,
+            drawing: {}
+        };
+        setupCanvas(thumbnailCanvas, url, imageInfo[index].drawing,
+                    thumbnailCanvasWidth, thumbnailCanvasHeight, false);
+        thumbnailCanvas.unbind('click');
+        thumbnailCanvas.click(function() {
+            print('SECUNDOOOOOOOO 2222222');
+            showImagePopup(url, index);
         });
+    });
     var deleteButton = $('<button>', { class: 'btn btn-danger' });
     deleteButton.append(getGlyph('remove'), ' ' + STRINGS.delete);
     deleteButton.click(function() {
