@@ -10,3 +10,8 @@
 .table-user-information > tbody > tr > td {
     border-top: 0;
 }
+
+.inline {
+    display: inline;
+    margin: 0px 0px 0px 10px;
+}

@@ -162,8 +162,16 @@ var getPrescriptionListItems = function(visitInfo) {
     for (var prescription in prescriptions) {
         var item = $('<li>', { class: 'list-group-item' });
         var pInfo = prescriptions[prescription];
-        var prescriptionString = pInfo.name + ' ' + pInfo.quantity;
-        item.text(prescriptionString);
+        var prescriptionName = pInfo.name;
+        var prescriptionQuantity = pInfo.quantity;
+        var prescriptionUsage = pInfo.usage;
+        var quantityBadge = $('<h3>', { class: 'inline' });
+        quantityBadge.append($('<span>', { class: 'label label-primary' }).text(prescriptionQuantity));
+        var usageBadge = $('<h3>', { class: 'inline' });
+        usageBadge.append($('<span>', { class: 'label label-success' }).text(prescriptionUsage));
+        item.text(prescriptionName);
+        item.append(quantityBadge);
+        item.append(usageBadge);
         output.push(item);
     }
     return output;
