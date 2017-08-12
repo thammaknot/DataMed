@@ -1,7 +1,7 @@
 var renderPage = function() {
     $('#main').show();
+    setUpQueueNotifications();
 };
-
 var currentPatient = null;
 
 var renderPatientInfo = function(id) {

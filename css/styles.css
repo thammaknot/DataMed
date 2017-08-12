@@ -15,3 +15,13 @@
     display: inline;
     margin: 0px 0px 0px 10px;
 }
+
+.nav-treatment-queue-badge {
+    background: red;
+    margin: 0px 0px 0px 5px;
+}
+
+.nav-payment-queue-badge {
+    background: #82d435;
+    margin: 0px 0px 0px 5px;
+}

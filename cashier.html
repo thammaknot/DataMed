@@ -22,8 +22,8 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#treatmentQueuePanel">คิวกายภาพบำบัด</a></li>
-                        <li><a data-toggle="tab" href="#paymentQueuePanel">คิวรับยา</a></li>
+                        <li class="active"><a data-toggle="tab" href="#treatmentQueuePanel" id="treatment_queue_tab_header">คิวกายภาพบำบัด</a></li>
+                        <li><a data-toggle="tab" href="#paymentQueuePanel" id="payment_queue_tab_header">คิวรับยา</a></li>
                     </ul>
                     <div class="tab-content">
                         <div id="paymentQueuePanel" class="tab-pane fade">
@@ -72,6 +72,7 @@
                  // User is signed in.
                  renderTreatmentQueue();
                  renderPaymentQueue();
+                 setUpQueueNotifications();
              } else {
                  // No user is signed in.
                  firebase.auth().signInWithPopup(provider).then(function(result) {
@@ -81,6 +82,7 @@
                      var user = result.user;
                      renderTreatmentQueue();
                      renderPaymentQueue();
+                     setUpQueueNotifications();
                  }).catch(function(error) {
                      // Handle Errors here.
                      var errorCode = error.code;

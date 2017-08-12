@@ -574,3 +574,63 @@ var getGlyph = function(name) {
     var span = $('<span>', { class: 'glyphicon glyphicon-' + name });
     return span;
 };
+
+var setUpQueueNotifications = function() {
+    firebase.database().ref('treatment-queue/')
+        .on('value', function(data) {
+            var length = 0;
+            if (data && data.val()) {
+                length = Object.keys(data.val()).length;
+            }
+            if (length == 0) {
+                $('#treatment_queue_notification').remove();
+            } else {
+                var treatmentQueueNotificationBadge = $('#treatment_queue_notification');
+                if (treatmentQueueNotificationBadge.length == 0) {
+                    treatmentQueueNotificationBadge =
+                        $('<span>', { class: 'badge nav-treatment-queue-badge',
+                                      id: 'treatment_queue_notification'});
+                }
+                treatmentQueueNotificationBadge.text(length);
+                var navHeader = $('#queue_nav_header');
+                var tabHeader = $('#treatment_queue_tab_header');
+                print('Tab header: ');
+                print(tabHeader);
+                print('badge: '); print(treatmentQueueNotificationBadge);
+                if (navHeader) {
+                    print('11111');
+                    navHeader.append(treatmentQueueNotificationBadge);
+                }
+                if (tabHeader) {
+                    print('22222');
+                    tabHeader.append(treatmentQueueNotificationBadge);
+                }
+            }
+        });
+    firebase.database().ref('payment-queue/')
+        .on('value', function(data) {
+            var length = 0;
+            if (data && data.val()) {
+                length = Object.keys(data.val()).length;
+            }
+            if (length == 0) {
+                $('#payment_queue_notification').remove();
+            } else {
+                var paymentQueueNotificationBadge = $('#payment_queue_notification');
+                if (paymentQueueNotificationBadge.length == 0) {
+                    paymentQueueNotificationBadge =
+                        $('<span>', { class: 'badge nav-payment-queue-badge',
+                                      id: 'payment_queue_notification'});
+                }
+                paymentQueueNotificationBadge.text(length);
+                var navHeader = $('#queue_nav_header');
+                var tabHeader = $('#payment_queue_tab_header');
+                if (navHeader) {
+                    navHeader.append(paymentQueueNotificationBadge);
+                }
+                if (tabHeader) {
+                    tabHeader.append(paymentQueueNotificationBadge);
+                }
+            }
+        });
+};
