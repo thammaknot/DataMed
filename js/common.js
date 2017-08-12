@@ -594,15 +594,10 @@ var setUpQueueNotifications = function() {
                 treatmentQueueNotificationBadge.text(length);
                 var navHeader = $('#queue_nav_header');
                 var tabHeader = $('#treatment_queue_tab_header');
-                print('Tab header: ');
-                print(tabHeader);
-                print('badge: '); print(treatmentQueueNotificationBadge);
                 if (navHeader) {
-                    print('11111');
                     navHeader.append(treatmentQueueNotificationBadge);
                 }
                 if (tabHeader) {
-                    print('22222');
                     tabHeader.append(treatmentQueueNotificationBadge);
                 }
             }
