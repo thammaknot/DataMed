@@ -1,5 +1,7 @@
+var TREATMENT_FIREBASE_PATH = 'treatments/';
+
 var renderTreatments = function() {
-    firebase.database().ref('treatments')
+    firebase.database().ref(TREATMENT_FIREBASE_PATH)
         .once('value', function(data) {
             var treatments = data.val();
             if (!treatments) { return; }
@@ -12,15 +14,17 @@ var renderTreatments = function() {
             }
             treatmentPanel.append(outerForm);
         });
-    var saveButton = $('<button>', { text: STRINGS.save,
-                                     class: 'btn btn-success',
+    var saveButton = $('<button>', { class: 'btn btn-success',
                                      id: 'save_treatment_button'});
+    saveButton.append(getGlyph('floppy-disk'));
+    saveButton.append(' ' + STRINGS.save);
     saveButton.click(function() {
         saveTreatments();
     });
-    var newTreatmentButton = $('<button>', { text: STRINGS.new_treatment,
-                                                class: 'btn btn-primary',
-                                                id: 'new_treatment_button'});
+    var newTreatmentButton = $('<button>', { class: 'btn btn-primary',
+                                             id: 'new_treatment_button'});
+    newTreatmentButton.append(getGlyph('plus'));
+    newTreatmentButton.append(' ' + STRINGS.new_treatment);
     newTreatmentButton.click(function() {
         newTreatment();
     });
@@ -30,7 +34,7 @@ var renderTreatments = function() {
 };
 
 var newTreatment = function() {
-    var treatmentId = firebase.database().ref('treatments/').push({});
+    var treatmentId = firebase.database().ref(TREATMENT_FIREBASE_PATH).push({});
     print(treatmentId);
     var panel = renderTreatmentPanel(treatmentId.key, {});
     $('#treatmentListContainer').append(panel);
@@ -43,8 +47,12 @@ var renderTreatmentPanel = function(key, info) {
         var field = renderField(fieldKey, treatmentKeys[fieldKey], info[fieldKey]);
         body.append(field);
     }
-    var deleteButton = $('<button>', { text: STRINGS.delete,
-                                       class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    var deleteButton = $('<button>', { class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    deleteButton.append(getGlyph('trash'));
+    deleteButton.append(' ' + STRINGS.delete);
+    deleteButton.click(function() {
+        firebase.database().ref(TREATMENT_FIREBASE_PATH + key).remove(onUpdateComplete);
+    });
     body.append(deleteButton);
     panel.append(body);
     return panel;
@@ -63,5 +71,5 @@ var saveTreatments = function() {
         }
         map[treatmentId] = info;
     });
-    firebase.database().ref('treatments/').update(map, onUpdateComplete);
+    firebase.database().ref(TREATMENT_FIREBASE_PATH).update(map, onUpdateComplete);
 }

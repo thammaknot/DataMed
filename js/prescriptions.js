@@ -1,5 +1,7 @@
+var PRESCRIPTION_FIREBASE_PATH = 'prescriptions/';
+
 var renderPrescriptions = function() {
-    firebase.database().ref('prescriptions')
+    firebase.database().ref(PRESCRIPTION_FIREBASE_PATH)
         .once('value', function(data) {
             var prescriptions = data.val();
             if (!prescriptions) { return; }
@@ -12,15 +14,17 @@ var renderPrescriptions = function() {
             }
             prescriptionPanel.append(outerForm);
         });
-    var saveButton = $('<button>', { text: STRINGS.save,
-                                     class: 'btn btn-success',
+    var saveButton = $('<button>', { class: 'btn btn-success',
                                      id: 'save_prescription_button'});
+    saveButton.append(getGlyph('floppy-disk'));
+    saveButton.append(' ' + STRINGS.save);
     saveButton.click(function() {
         savePrescriptions();
     });
-    var newPrescriptionButton = $('<button>', { text: STRINGS.new_prescription,
-                                                class: 'btn btn-primary',
+    var newPrescriptionButton = $('<button>', { class: 'btn btn-primary',
                                                 id: 'new_prescription_button'});
+    newPrescriptionButton.append(getGlyph('plus'));
+    newPrescriptionButton.append(' ' + STRINGS.new_prescription);
     newPrescriptionButton.click(function() {
         newPrescription();
     });
@@ -36,15 +40,19 @@ var renderPrescriptionPanel = function(key, info) {
         var field = renderField(fieldKey, prescriptionKeys[fieldKey], info[fieldKey]);
         body.append(field);
     }
-    var deleteButton = $('<button>', { text: STRINGS.delete,
-                                       class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    var deleteButton = $('<button>', { class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    deleteButton.append(getGlyph('trash'));
+    deleteButton.append(' ' + STRINGS.delete);
+    deleteButton.click(function() {
+        firebase.database().ref(PRESCRIPTION_FIREBASE_PATH + key).remove(onUpdateComplete);
+    });
     body.append(deleteButton);
     panel.append(body);
     return panel;
 };
 
 var newPrescription = function() {
-    var prescriptionId = firebase.database().ref('prescriptions/').push({});
+    var prescriptionId = firebase.database().ref(PRESCRIPTION_FIREBASE_PATH).push({});
     print(prescriptionId);
     var panel = renderPrescriptionPanel(prescriptionId.key, {});
     $('#prescriptionListContainer').append(panel);
@@ -63,5 +71,5 @@ var savePrescriptions = function() {
         }
         map[prescriptionId] = info;
     });
-    firebase.database().ref('prescriptions/').update(map, onUpdateComplete);
+    firebase.database().ref(PRESCRIPTION_FIREBASE_PATH).update(map, onUpdateComplete);
 }

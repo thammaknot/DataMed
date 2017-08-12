@@ -94,6 +94,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
         element = renderDrugUsage(value, elementId);
     } else if (type == 'images') {
         element = renderImagePanel(value, elementId);
+    } else if (type == 'procedures') {
+        element = renderProcedures(value, elementId);
     }
     wrapperDiv.append(element);
     return wrapperDiv;
@@ -628,4 +630,52 @@ var setUpQueueNotifications = function() {
                 }
             }
         });
+};
+
+var renderProcedures = function(value, elementId) {
+    var outputDiv = $('<div>');
+    var textArea = $('<textarea>', { id: elementId,
+                                     text: value,
+                                     class: 'form-control',
+                                     rows: 5,
+                                     cols: 30 });
+    var addTemplateSelect = $('<select>', { class: 'form-control' });
+    firebase.database().ref('procedure-templates/')
+        .once('value', function(data) {
+            var defaultOption = $('<option>', { value: -1, text: STRINGS.select_to_add });
+            addTemplateSelect.append(defaultOption);
+            var templates = data.val();
+            if (!templates) { return; }
+            for (var key in templates) {
+                var info = templates[key];
+                var option = $('<option>', {
+                    value: info.text,
+                    text: info.name,
+                });
+                addTemplateSelect.append(option);
+            }
+            addTemplateSelect.change(function() {
+                var selectedText = $(this).find('option:selected')[0].value;
+                if (selectedText == -1) { return; }
+                var oldText = textArea.val();
+                var newText = '';
+                if (oldText.length > 0) {
+                    newText = oldText + STRINGS.horizontal_divider + selectedText;
+                } else {
+                    newText = selectedText;
+                }
+                textArea.val(newText);
+                $(this).find('option[value=-1]').prop('selected', true);
+            });
+        });
+    var clearButton = $('<button>', { class: 'btn btn-danger' });
+    clearButton.append(getGlyph('erase'));
+    clearButton.append(STRINGS.clear);
+    clearButton.click(function() {
+        elementId.val('');
+    });
+    outputDiv.append(addTemplateSelect);
+    outputDiv.append(clearButton);
+    outputDiv.append(textArea);
+    return outputDiv;
 };
