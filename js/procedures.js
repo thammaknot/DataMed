@@ -14,15 +14,17 @@ var renderProcedures = function() {
             }
             procedurePanel.append(outerForm);
         });
-    var saveButton = $('<button>', { text: STRINGS.save,
-                                     class: 'btn btn-success',
+    var saveButton = $('<button>', { class: 'btn btn-success',
                                      id: 'save_procedure_button'});
+    saveButton.append(getGlyph('floppy-disk'));
+    saveButton.append(' ' + STRINGS.save);
     saveButton.click(function() {
         saveProcedures();
     });
-    var newProcedureButton = $('<button>', { text: STRINGS.new_procedure,
-                                                class: 'btn btn-primary',
-                                                id: 'new_procedure_button'});
+    var newProcedureButton = $('<button>', { class: 'btn btn-primary',
+                                             id: 'new_procedure_button'});
+    newProcedureButton.append(getGlyph('plus'));
+    newProcedureButton.append(' ' + STRINGS.new_procedure);
     newProcedureButton.click(function() {
         newProcedure();
     });

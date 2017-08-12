@@ -672,7 +672,7 @@ var renderProcedures = function(value, elementId) {
     clearButton.append(getGlyph('erase'));
     clearButton.append(STRINGS.clear);
     clearButton.click(function() {
-        elementId.val('');
+        textArea.val('');
     });
     outputDiv.append(addTemplateSelect);
     outputDiv.append(clearButton);
