@@ -16,20 +16,15 @@ var renderTreatmentQueue = function() {
                                           text: count + '. ' + patient.first_name
                                           + ' ' + patient.last_name });
                 div.append(header);
-                var symptomSpan = $('<span>', { class: 'label label-primary'}).text(visit.symptoms);
-                var treatmentSpan = $('<span>', { class: 'label label-success' }).text(getTreatmentString(visit));
+                var body = renderVisitSummary(visit);
                 var doneButton = $('<button>', { class: 'btn btn-success' });
-                var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-ok' });
-                doneButton.append(doneIconSpan);
+                doneButton.append(getGlyph('ok'));
                 doneButton.click(function(queueKey, queueInfo) {
                     return function() {
                         removeFromTreatmentQueue(queueKey, queueInfo);
                         addToPaymentQueue(queueKey, queueInfo);
                     };
                 }(key, info));
-                var body = $('<div>', { class: 'panel-body'});
-                body.append(symptomSpan);
-                body.append(treatmentSpan);
                 body.append(doneButton);
                 div.append(body);
                 queuePanel.append(div);
@@ -101,10 +96,8 @@ var renderPaymentQueue = function() {
                 var body = renderVisitSummary(visit);
 
                 var doneButton = $('<button>', { class: 'btn btn-success' });
-                var doneIconSpan = $('<span>', { class: 'glyphicon glyphicon-ok' });
-                var moneyIconSpan = $('<span>', { class: 'glyphicon glyphicon-bitcoin' });
-                doneButton.append(moneyIconSpan);
-                doneButton.append(doneIconSpan);
+                doneButton.append(getGlyph('bitcoin'));
+                doneButton.append(getGlyph('ok'));
                 doneButton.click(function(queueKey, queueInfo, cost) {
                     return function() {
                         showPaymentConfirmationDialog(queueKey, queueInfo, cost);
