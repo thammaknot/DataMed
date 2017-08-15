@@ -54,4 +54,7 @@ var STRINGS = {
     invalid_height: 'ส่วนสูงไม่ถูกต้อง',
     invalid_cost: 'ค่ารักษาไม่ถูกต้อง',
     invalid_next_visit: 'วันที่นัดครั้งหน้าไม่ถูกต้อง',
+    invalid_phone: 'เบอร์โทรศัพท์ไม่ถูกต้อง',
+    invalid_dob: 'วันเดือนปีเกิดไม่ถูกต้อง',
+    invalid_email: 'อีเมล์ไม่ถูกต้อง',
 };

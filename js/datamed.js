@@ -120,10 +120,14 @@ var savePatientInfo = function(id) {
     for (var key in patientKeys) {
         var dataKey = key;
         var value = $('#edit_' + dataKey).val();
-        print('Saving ' + key);
-        print(value);
         if (value) {
-            info[dataKey] = value;
+            var result = validatePatientData(key, value);
+            if (result.error) {
+                alert(result.message);
+                return;
+            } else {
+                info[dataKey] = value;
+            }
         }
     }
     currentPatient = info;
