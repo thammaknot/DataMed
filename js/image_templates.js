@@ -98,7 +98,7 @@ var renderImagePanel = function(key, name, url) {
     var img = $('<img>', { class: 'img-rounded', src: url });
     img.width(400);
     var deleteButton = $('<button>', { class: 'btn btn-danger' });
-    deleteButton.append(getGlyph('remove'));
+    deleteButton.append(getGlyph('trash'));
     deleteButton.append(' ' + STRINGS.delete);
     deleteButton.click(function() {
         var ok = confirm(STRINGS.remove_image);

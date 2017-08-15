@@ -47,11 +47,11 @@ var renderProcedurePanel = function(key, info) {
         var field = renderField(fieldKey, procedureKeys[fieldKey], info[fieldKey]);
         body.append(field);
     }
-    var deleteButton = $('<button>', { class: 'btn btn-danger col-sm-2 col-sm-offset-10'});
+    var deleteButton = $('<button>', { class: 'btn btn-danger'});
     deleteButton.append(getGlyph('trash'));
     deleteButton.append(' ' + STRINGS.delete);
     deleteButton.click(function() {
-        firebase.database().ref(PROCEDURE_TEMPLATE_FIREBASE_PATH + key).remove(onUpdateComplete);
+        firebase.database().ref(PROCEDURE_TEMPLATE_FIREBASE_PATH + key).remove(onDeletionComplete);
     });
     body.append(deleteButton);
     panel.append(body);
