@@ -8,23 +8,30 @@ var updateVisit = function(userId, visitId, queueKey) {
         currentVisit.id = visitId;
     }
     for (var key in visitKeys) {
+        var value = null;
         if (key == 'prescriptions' || key == 'treatments') {
             var prefix = (key == 'prescriptions' ? 'prescription' : 'treatment');
-            currentVisit[key] = getCurrentPrescriptionOrTreatment(prefix);
+            value = getCurrentPrescriptionOrTreatment(prefix);
         } else if (key == 'images') {
-            print('Saving images');
-            print(imageInfo);
             if (imageInfo.length > 0) {
-                currentVisit[key] = imageInfo;
+                value = imageInfo;
             }
         } else {
-            var value = $('#edit_' + key).val();
-            if (value) {
+            value = $('#edit_' + key).val();
+        }
+
+        if (value) {
+            var result = validateVisitData(key, value);
+            if (result.error) {
+                alert(result.message);
+                return;
+            } else {
                 currentVisit[key] = value;
             }
         }
     }
-    var ok = firebase.database().ref('visits/' + userId + '/' + visitId + '/').update(currentVisit, onUpdateComplete);
+    var ok = firebase.database().ref('visits/' + userId + '/' + visitId + '/')
+        .update(currentVisit, onUpdateComplete);
     if (queueKey) {
         firebase.database().ref('queue/' + queueKey + '/visit').update(currentVisit);
     }

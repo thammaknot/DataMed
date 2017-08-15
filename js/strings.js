@@ -47,4 +47,11 @@ var STRINGS = {
     image_title: 'ภาพร่างกาย',
     browse_file: 'เลือกไฟล์',
     horizontal_divider: '\n==========================\n\n',
+
+    invalid_bp: 'ค่าความดันโลหิตไม่ถูกต้อง',
+    invalid_hr: 'ค่าชีพจรไม่ถูกต้อง',
+    invalid_weight: 'น้ำหนักไม่ถูกต้อง',
+    invalid_height: 'ส่วนสูงไม่ถูกต้อง',
+    invalid_cost: 'ค่ารักษาไม่ถูกต้อง',
+    invalid_next_visit: 'วันที่นัดครั้งหน้าไม่ถูกต้อง',
 };
