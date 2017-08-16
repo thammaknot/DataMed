@@ -103,9 +103,8 @@ var queuePatient = function(userId, visitId) {
 
 var createNewVisit = function(id) {
     var dateTime = new Date();
-    var dateString = dateTime.getDate() + '/' + (dateTime.getMonth() + 1)
-        + '/' + dateTime.getFullYear() + ' ' + dateTime.getHours()
-        + ':' + dateTime.getMinutes() + ':' + dateTime.getSeconds();
+    var dateString =
+        dateTime.toLocaleDateString('th-TH') + ' ' + dateTime.toLocaleTimeString('th-TH');
     var newVisitInfo = {
         date: dateString
     };

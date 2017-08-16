@@ -53,6 +53,12 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                                  value: value,
                                  class: 'form-control',
                                  disabled: !editable });
+        $.datepicker.setDefaults(
+            $.extend(
+                {'dateFormat':'dd-mm-yyyy'},
+                $.datepicker.regional['th']
+            )
+        );
         element.datepicker({ dateFormat: 'dd/mm/yy',
                              changeYear: true,
                              showButtonPanel: true,
