@@ -13,7 +13,7 @@ var STRINGS = {
     new_image: 'เพิ่มภาพใหม่',
     finish: 'เสร็จสิ้นการตรวจ',
     add_prescription: 'เพิ่มยา',
-    add_treatment: 'เพิ่มกายภาพบำบัด',
+    add_treatment: 'เพิ่มกายภาพบำบัด/ฝังเข็ม',
     add_image: 'เพิ่มรูปภาพ',
     auto_cost: 'คำนวนค่ารักษา',
     pick_report_date: 'เลือกวันที่จะดูรายงาน',
