@@ -32,7 +32,7 @@ var STRINGS = {
     select: 'เลือก...',
     select_to_add: 'เลือกเพื่อเพิ่ม...',
     new_prescription: 'เพิ่มชนิดยา',
-    new_treatment: 'เพิ่มชนิดกายภาพบำบัด',
+    new_treatment: 'เพิ่มชนิดกายภาพบำบัด/ฝังเข็ม',
     new_procedure: 'เพิ่มต้นฉบับ',
     have_you_received_payment1: 'ได้รับเงิน',
     have_you_received_payment2: 'จากคนใข้แล้วใช่ไหม?',
