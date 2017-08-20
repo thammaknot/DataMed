@@ -296,6 +296,7 @@ var renderTreatmentNameAndPriceMenu = function(selectedName, storedUnitPrice) {
     var priceNameLabel = $('<label>', { text: 'Unit price',
                                         style: 'display: inline-block; margin-right: 10px;'});
     var priceLabel = $('<label>', { style: 'display: inline-block; margin-right: 10px;',
+                                    id: 'treatmentPriceLabel',
                                     class: 'unit_price_value'});
     var unitPrice = -1;
     for (var key in treatmentList) {
@@ -331,10 +332,13 @@ var renderTreatmentRow = function(name, unitPrice, quantity) {
     var defaultValue = treatmentList[treatmentId].default_quantity;
     $(treatmentSelect).change(function() {
         var newTreatmentId = $(this).find('option:selected')[0].value;
-        var priceLabel = $(treatmentNameAndPriceDiv).find('#priceLabel')[0];
+        var priceLabel = $(treatmentNameAndPriceDiv).find('#treatmentPriceLabel')[0];
         var unitPrice = treatmentList[newTreatmentId].unit_price;
         $(priceLabel).text(unitPrice);
 
+        print('Treatment change!');
+        print('New price is ' + unitPrice);
+        print(treatmentList[newTreatmentId]);
         var newDefaultValue = treatmentList[newTreatmentId].default_quantity;
         quantityTextField.attr('value', newDefaultValue);
     });
