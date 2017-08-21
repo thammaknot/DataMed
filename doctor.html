@@ -63,8 +63,15 @@
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script>
-         $.get("doctor_nav_bar.html", function(data){
-             $("#nav_placeholder").replaceWith(data);
+         $.get('doctor_nav_bar.html', function(data){
+             $('#nav_placeholder').replaceWith(data);
+             $('#nav_bar').children().each( function() {
+                 $(this).removeClass('active');
+             });
+             var path = window.location.pathname;
+             var page = path.split('/').pop();
+             var pageId = page.split('.')[0];
+             $('#' + pageId + '_nav').addClass('active');
          });
         </script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

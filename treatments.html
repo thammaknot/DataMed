@@ -34,6 +34,13 @@
         <script>
          $.get("doctor_nav_bar.html", function(data){
              $("#nav_placeholder").replaceWith(data);
+             $('#nav_bar').children().each( function() {
+                 $(this).removeClass('active');
+             });
+             var path = window.location.pathname;
+             var page = path.split('/').pop();
+             var pageId = page.split('.')[0];
+             $('#' + pageId + '_nav').addClass('active');
          });
         </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
