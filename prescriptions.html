@@ -7,21 +7,7 @@
     </head>
     <body>
         <div class="container">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a class="navbar-brand" href="#">DataMed</a>
-                    </div>
-                    <ul class="nav navbar-nav">
-                        <li><a href="doctor.html">แพทย์</a></li>
-                        <li><a href="report.html">รายงานประจำวัน</a></li>
-                        <li class="active"><a href="prescriptions.html">ข้อมูลยา</a></li>
-                        <li><a href="treatments.html">ข้อมูลกายภาพบำบัด/ฝังเข็ม</a></li>
-                        <li><a href="procedures.html">ชุดการตรวจร่างกาย</a></li>
-                        <li><a href="image_templates.html">ภาพร่างกาย</a></li>
-                    </ul>
-                </div>
-            </nav>
+            <div id="nav_placeholder"></div>
             <div id="prescription_list" class="col-sm-8">
             </div>
             <hr>
@@ -45,6 +31,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+         $.get("doctor_nav_bar.html", function(data){
+             $("#nav_placeholder").replaceWith(data);
+         });
+        </script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js"></script>
         <script src="js/keys.js"></script>
         <script src="js/strings.js"></script>
