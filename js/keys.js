@@ -79,6 +79,8 @@ var prescriptionKeys = {
                          'inject': { 'display' : 'ยาฉีด' },
                          'apply' : { 'display' : 'ยาทาภายนอก' }
                      }},
+    'benefits' : { 'display' : 'สรรพคุณ',
+                   'type' : 'text' },
 };
 
 var equipmentKeys = {

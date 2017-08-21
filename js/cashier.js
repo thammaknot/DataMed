@@ -165,13 +165,17 @@ var getPrescriptionListItems = function(visitInfo) {
         var prescriptionName = pInfo.name;
         var prescriptionQuantity = pInfo.quantity;
         var prescriptionUsage = pInfo.usage;
+        var prescriptionBenefits = pInfo.benefits;
         var quantityBadge = $('<h3>', { class: 'inline' });
         quantityBadge.append($('<span>', { class: 'label label-primary' }).text(prescriptionQuantity));
         var usageBadge = $('<h3>', { class: 'inline' });
         usageBadge.append($('<span>', { class: 'label label-success' }).text(prescriptionUsage));
+        var benefitBadge = $('<h3>', { class: 'inline' });
+        benefitBadge.append($('<span>', { class: 'label label-info' }).text(prescriptionBenefits));
         item.text(prescriptionName);
         item.append(quantityBadge);
         item.append(usageBadge);
+        item.append(benefitBadge);
         output.push(item);
     }
     return output;

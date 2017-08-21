@@ -123,6 +123,8 @@ var getCurrentPrescriptionOrTreatment = function(prefix) {
         if (prefix == 'prescription') {
             var usage = $(this).find('input.usage').val();
             prescriptionInfo[medName].usage = usage;
+            var benefits = $(this).find('input.benefits').val();
+            prescriptionInfo[medName].benefits = benefits;
         }
     });
     return prescriptionInfo;
@@ -217,7 +219,7 @@ var renderVisitDiv = function(visitInfo, queueKey, queueInfo) {
 };
 
 var addNewPrescription = function() {
-    var emptyPrescription = renderPrescriptionRow('', null, 0);
+    var emptyPrescription = renderPrescriptionRow('', null, 0, '');
     $('#prescription_panel').append(emptyPrescription);
 };
 

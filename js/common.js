@@ -162,8 +162,8 @@ var renderCostValue = function(value) {
 };
 
 /**
- * value: {'1': { name: 'med1', quantity: 10, unit_price: 12, usage: 'abcd'},
- *         '2': { name: 'med2', quantity: 20, unit_price: 20, usage: 'abcd'}}
+ * value: {'1': { name: 'med1', quantity: 10, unit_price: 12, usage: 'abcd', benefits: 'xyz' },
+ *         '2': { name: 'med2', quantity: 20, unit_price: 20, usage: 'abcd', benefits: 'xyz' }}
  */
 var renderPrescriptionValue = function(value) {
     var div = $('<div>', { id: 'prescription_panel'});
@@ -173,7 +173,8 @@ var renderPrescriptionValue = function(value) {
         var unitPrice = med.unit_price;
         var quantity = med.quantity;
         var usage = med.usage;
-        var row = renderPrescriptionRow(name, unitPrice, quantity, usage);
+        var benefits = med.benefits;
+        var row = renderPrescriptionRow(name, unitPrice, quantity, usage, benefits);
         div.append(row);
     }
     var wrapperDiv = $('<div>');
@@ -219,15 +220,17 @@ var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice)
     return div;
 };
 
-var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
+var renderPrescriptionRow = function(name, unitPrice, quantity, usage, benefits) {
     var row = $('<div>', { 'class': 'prescription_row form-group', style: 'display: inline-block;' });
     var prescriptionNameAndPriceDiv =
         renderPrescriptionNameAndPriceMenu(name, unitPrice);
     var quantityTextField = $('<input>', { value: quantity,
-                                           class: 'quantity_value form-control col-xs-1',
+                                           class: 'quantity_value form-control',
                                            style: 'display: inline-block;' }).attr('size', 5);
     var usageField = $('<input>', { value: usage,
                                     class: 'form-control usage' });
+    var benefitField = $('<input>', { value: benefits,
+                                      class: 'form-control benefits' });
 
     var prescriptionSelect = prescriptionNameAndPriceDiv.find('#prescriptionName')[0];
     var prescriptionId = $(prescriptionSelect).find('option:selected')[0].value;
@@ -242,6 +245,13 @@ var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
         quantityTextField.attr('value', newDefaultValue);
         var newDefaultUsage = prescriptionList[newPrescriptionId].default_usage;
         usageField.attr('value', newDefaultUsage);
+        var newBenefitValue = prescriptionList[newPrescriptionId].benefits;
+        if (!newBenefitValue) {
+            newBenefitValue = '';
+        }
+        print('New pres id = ' + newPrescriptionId);
+        print('New benefit value = ' + newBenefitValue);
+        benefitField.attr('value', newBenefitValue);
     });
     if (!quantity) {
         quantityTextField.attr('value', defaultValue);
@@ -249,6 +259,10 @@ var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
     var defaultUsageValue = prescriptionList[prescriptionId].default_usage;
     if (!usage) {
         usageField.attr('value', defaultUsageValue);
+    }
+    var drugBenefitValue = prescriptionList[prescriptionId].benefits;
+    if (!benefits) {
+        benefitField.attr('value', drugBenefitValue);
     }
     var deleteButton = $('<button>', { class: 'btn btn-danger' });
     deleteButton.append(getGlyph('remove'));
@@ -261,6 +275,7 @@ var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
     row.append(prescriptionNameAndPriceDiv);
     row.append(quantityTextField);
     row.append(usageField);
+    row.append(benefitField);
     row.append(deleteButton);
     return row;
 };
