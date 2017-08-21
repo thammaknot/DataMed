@@ -346,7 +346,7 @@ var renderTreatmentRow = function(name, unitPrice, quantity) {
     var deleteButton = $('<button>', { class: 'btn btn-danger' });
     var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
     deleteButton.append(deleteIconSpan);
-    deleteButton.append(' Delete');
+    deleteButton.append(' ' + STRINGS.delete);
     deleteButton.click(function(rowToDelete) {
         return function() {
             rowToDelete.remove();
