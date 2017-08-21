@@ -50,6 +50,8 @@ var visitKeys = {
                      'type': 'number' },
     'prescriptions': { 'display': 'ยา',
                        'type': 'prescriptions' },
+    'equipments': { 'display': 'อุปกรณ์',
+                    'type': 'equipments' },
     'treatments': { 'display': 'กายภาพบำบัด/ฝังเข็ม',
                  'type': 'treatments' },
     'cost': { 'display': 'ค่ารักษา',
@@ -77,6 +79,16 @@ var prescriptionKeys = {
                          'inject': { 'display' : 'ยาฉีด' },
                          'apply' : { 'display' : 'ยาทาภายนอก' }
                      }},
+};
+
+var equipmentKeys = {
+    'name' : { 'display': 'ชื่ออุปกรณ์',
+               'type': 'short_text',
+               'size': 30},
+    'unit_price' : { 'display' : 'ราคาต่อหน่วย',
+                     'type': 'number' },
+    'default_quantity' : { 'display' : 'จำนวนหน่วยทั่วไป',
+                           'type' : 'number' },
 };
 
 var treatmentKeys = {

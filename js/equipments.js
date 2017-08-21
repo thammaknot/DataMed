@@ -4,13 +4,14 @@ var renderEquipments = function() {
     firebase.database().ref(EQUIPMENT_FIREBASE_PATH)
         .once('value', function(data) {
             var equipments = data.val();
-            if (!equipments) { return; }
             var equipmentPanel = $('#equipment_list');
             var outerForm = $('<form>', { class: 'form-horizontal', id: 'equipmentListContainer' });
-            for (var key in equipments) {
-                var info = equipments[key];
-                var panel = renderEquipmentPanel(key, info);
-                outerForm.append(panel);
+            if (equipments) {
+                for (var key in equipments) {
+                    var info = equipments[key];
+                    var panel = renderEquipmentPanel(key, info);
+                    outerForm.append(panel);
+                }
             }
             equipmentPanel.append(outerForm);
         });
@@ -35,7 +36,6 @@ var renderEquipments = function() {
 
 var newEquipment = function() {
     var equipmentId = firebase.database().ref(EQUIPMENT_FIREBASE_PATH).push({});
-    print(equipmentId);
     var panel = renderEquipmentPanel(equipmentId.key, {});
     $('#equipmentListContainer').append(panel);
 };

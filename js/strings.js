@@ -13,6 +13,7 @@ var STRINGS = {
     new_image: 'เพิ่มภาพใหม่',
     finish: 'เสร็จสิ้นการตรวจ',
     add_prescription: 'เพิ่มยา',
+    add_equipment: 'เพิ่มอุปกรณ์',
     add_treatment: 'เพิ่มกายภาพบำบัด/ฝังเข็ม',
     add_image: 'เพิ่มรูปภาพ',
     auto_cost: 'คำนวนค่ารักษา',
@@ -34,6 +35,7 @@ var STRINGS = {
     new_prescription: 'เพิ่มชนิดยา',
     new_treatment: 'เพิ่มชนิดกายภาพบำบัด/ฝังเข็ม',
     new_procedure: 'เพิ่มต้นฉบับ',
+    new_equipment: 'เพิ่มอุปกรณ์',
     have_you_received_payment1: 'ได้รับเงิน',
     have_you_received_payment2: 'จากคนใข้แล้วใช่ไหม?',
     no_results: 'ไม่พบคนไข้',
@@ -47,6 +49,7 @@ var STRINGS = {
     image_title: 'ภาพร่างกาย',
     browse_file: 'เลือกไฟล์',
     horizontal_divider: '\n==========================\n\n',
+    unit_price: 'ราคาต่อหน่วย',
 
     invalid_bp: 'ค่าความดันโลหิตไม่ถูกต้อง',
     invalid_hr: 'ค่าชีพจรไม่ถูกต้อง',

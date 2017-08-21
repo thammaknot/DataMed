@@ -4,13 +4,14 @@ var renderTreatments = function() {
     firebase.database().ref(TREATMENT_FIREBASE_PATH)
         .once('value', function(data) {
             var treatments = data.val();
-            if (!treatments) { return; }
             var treatmentPanel = $('#treatment_list');
             var outerForm = $('<form>', { class: 'form-horizontal', id: 'treatmentListContainer' });
-            for (var key in treatments) {
-                var info = treatments[key];
-                var panel = renderTreatmentPanel(key, info);
-                outerForm.append(panel);
+            if (treatments) {
+                for (var key in treatments) {
+                    var info = treatments[key];
+                    var panel = renderTreatmentPanel(key, info);
+                    outerForm.append(panel);
+                }
             }
             treatmentPanel.append(outerForm);
         });

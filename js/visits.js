@@ -1,5 +1,6 @@
 var prescriptionList = {};
 var treatmentList = {};
+var equipmentList = {};
 var currentVisit = null;
 
 var updateVisit = function(userId, visitId, queueKey) {
@@ -140,6 +141,12 @@ var loadPrescriptionList = function() {
             if (!treatments) { return; }
             treatmentList = treatments;
         });
+    firebase.database().ref('equipments/')
+        .on('value', function(data) {
+            var equipments = data.val();
+            if (!equipments) { return; }
+            equipmentList = equipments;
+        });
 };
 
 var displayFullVisit = function(queueKey, info) {
@@ -217,6 +224,11 @@ var addNewPrescription = function() {
 var addNewTreatment = function() {
     var emptyTreatment = renderTreatmentRow('', null, 0);
     $('#treatment_panel').append(emptyTreatment);
+};
+
+var addNewEquipment = function() {
+    var emptyEquipment = renderEquipmentRow('', null, 0);
+    $('#equipment_panel').append(emptyEquipment);
 };
 
 var addToPostQueue = function(queueKey, queueInfo) {

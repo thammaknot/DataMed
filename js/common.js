@@ -80,6 +80,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
                              yearRange: '-0:+1' });
     } else if (type == 'prescriptions') {
         element = renderPrescriptionValue(value);
+    } else if (type == 'equipments') {
+        element = renderEquipmentValue(value);
     } else if (type == 'treatments') {
         element = renderTreatmentValue(value);
     } else if (type == 'cost') {
@@ -132,10 +134,16 @@ var renderCostValue = function(value) {
     autoCostButton.append(' ' + STRINGS.auto_cost);
     autoCostButton.click(function() {
         var prescriptionPanel = $('#prescription_panel');
+        var equipmentPanel = $('#equipment_panel');
         var treatmentPanel = $('#treatment_panel');
         var doctorsFeePanel = $('#edit_doctors_fee');
         var totalCost = 0;
         $(prescriptionPanel).find('div.prescription_row').each(function() {
+            var unitPrice = $(this).find('label.unit_price_value').text();
+            var quantity = $(this).find('input.quantity_value').val();
+            totalCost += (Number(unitPrice) * Number(quantity));
+        });
+        $(equipmentPanel).find('div.equipment_row').each(function() {
             var unitPrice = $(this).find('label.unit_price_value').text();
             var quantity = $(this).find('input.quantity_value').val();
             totalCost += (Number(unitPrice) * Number(quantity));
@@ -216,7 +224,7 @@ var renderPrescriptionRow = function(name, unitPrice, quantity, usage) {
     var prescriptionNameAndPriceDiv =
         renderPrescriptionNameAndPriceMenu(name, unitPrice);
     var quantityTextField = $('<input>', { value: quantity,
-                                           class: 'quantity_value form-control',
+                                           class: 'quantity_value form-control col-xs-1',
                                            style: 'display: inline-block;' }).attr('size', 5);
     var usageField = $('<input>', { value: usage,
                                     class: 'form-control usage' });
@@ -353,6 +361,106 @@ var renderTreatmentRow = function(name, unitPrice, quantity) {
         };
     }(row));
     row.append(treatmentNameAndPriceDiv);
+    row.append(quantityTextField);
+    row.append(deleteButton);
+    return row;
+};
+
+/**
+ * value: {'1': { name: 'equipment1', quantity: 10, unit_price: 12},
+ *         '2': { name: 'equipment2', quantity: 20, unit_price: 20}}
+ */
+var renderEquipmentValue = function(value) {
+    var div = $('<div>', { id: 'equipment_panel'});
+    for (var key in value) {
+        var med = value[key];
+        var name = med.name;
+        var unitPrice = med.unit_price;
+        var quantity = med.quantity;
+        var row = renderEquipmentRow(name, unitPrice, quantity);
+        div.append(row);
+    }
+    var wrapperDiv = $('<div>');
+    var addButton = $('<button>', { class: 'btn btn-primary' });
+    var addIconSpan = $('<span>', { class: 'glyphicon glyphicon-plus' });
+    addButton.append(addIconSpan);
+    addButton.append(' ' + STRINGS.add_equipment);
+    addButton.click(function() {
+        addNewEquipment();
+    });
+    wrapperDiv.append(div);
+    wrapperDiv.append(addButton);
+    return wrapperDiv;
+};
+
+var renderEquipmentNameAndPriceMenu = function(selectedName, storedUnitPrice) {
+    var menu = $('<select>', { class: 'form-control',
+                               style: 'margin-right: 10px; display: inline-block;',
+                               id: 'equipmentName' });
+    var priceNameLabel = $('<label>', { text: STRINGS.unit_price,
+                                        style: 'display: inline-block; margin-right: 10px;'});
+    var priceLabel = $('<label>', { style: 'display: inline-block; margin-right: 10px;',
+                                    id: 'equipmentPriceLabel',
+                                    class: 'unit_price_value'});
+    var unitPrice = -1;
+    for (var key in equipmentList) {
+        var curEquipment = equipmentList[key];
+        var option = $('<option>').attr('value', key).text(curEquipment.name);
+        print('EL: ' + key);
+        if (curEquipment.name === selectedName || (unitPrice == -1)) {
+            option.prop('selected', true);
+            unitPrice = curEquipment.unit_price;
+        }
+        menu.append(option);
+    }
+    if (storedUnitPrice) {
+        unitPrice = storedUnitPrice;
+    }
+    $(priceLabel).text(unitPrice);
+    var div = $('<div>', { style: 'display: inline-block;'} );
+    div.append(menu);
+    div.append(priceNameLabel);
+    div.append(priceLabel);
+    return div;
+};
+
+var renderEquipmentRow = function(name, unitPrice, quantity) {
+    var row = $('<div>', { 'class': 'equipment_row form-group', style: 'display: inline-block;' });
+    var equipmentNameAndPriceDiv =
+        renderEquipmentNameAndPriceMenu(name, unitPrice);
+    var quantityTextField = $('<input>', { value: quantity,
+                                           class: 'quantity_value form-control',
+                                           style: 'display: inline-block;' }).attr('size', 5);
+
+    var equipmentSelect = equipmentNameAndPriceDiv.find('#equipmentName')[0];
+    var equipmentId = $(equipmentSelect).find('option:selected')[0].value;
+    var defaultValue = equipmentList[equipmentId].default_quantity;
+    $(equipmentSelect).change(function() {
+        var newEquipmentId = $(this).find('option:selected')[0].value;
+        var priceLabel = $(equipmentNameAndPriceDiv).find('#equipmentPriceLabel')[0];
+        var unitPrice = equipmentList[newEquipmentId].unit_price;
+        $(priceLabel).text(unitPrice);
+
+        print('Equipment change!');
+        print('New price is ' + unitPrice);
+        print(equipmentList[newEquipmentId]);
+        var newDefaultValue = equipmentList[newEquipmentId].default_quantity;
+        quantityTextField.attr('value', newDefaultValue);
+    });
+    if (!quantity) {
+        quantityTextField.attr('value', defaultValue);
+    }
+
+    var deleteButton = $('<button>', { class: 'btn btn-danger' });
+    var deleteIconSpan = $('<span>', { class: 'glyphicon glyphicon-remove' });
+    deleteButton.append(deleteIconSpan);
+    deleteButton.append(' ' + STRINGS.delete);
+    deleteButton.click(function(rowToDelete) {
+        return function() {
+            rowToDelete.remove();
+        };
+    }(row));
+    row.append(equipmentNameAndPriceDiv);
     row.append(quantityTextField);
     row.append(deleteButton);
     return row;

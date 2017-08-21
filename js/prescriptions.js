@@ -4,13 +4,14 @@ var renderPrescriptions = function() {
     firebase.database().ref(PRESCRIPTION_FIREBASE_PATH)
         .once('value', function(data) {
             var prescriptions = data.val();
-            if (!prescriptions) { return; }
             var prescriptionPanel = $('#prescription_list');
             var outerForm = $('<form>', { class: 'form-horizontal', id: 'prescriptionListContainer' });
-            for (var key in prescriptions) {
-                var info = prescriptions[key];
-                var panel = renderPrescriptionPanel(key, info);
-                outerForm.append(panel);
+            if (prescriptions) {
+                for (var key in prescriptions) {
+                    var info = prescriptions[key];
+                    var panel = renderPrescriptionPanel(key, info);
+                    outerForm.append(panel);
+                }
             }
             prescriptionPanel.append(outerForm);
         });
