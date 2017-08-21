@@ -133,11 +133,7 @@ var renderCostValue = function(value) {
     autoCostButton.click(function() {
         var prescriptionPanel = $('#prescription_panel');
         var treatmentPanel = $('#treatment_panel');
-        if ((!prescriptionPanel || prescriptionPanel.children().length == 0)
-           && (!treatmentPanel || treatmentPanel.children().length == 0)) {
-            alert('Please enter prescription/treatment first!');
-            return;
-        }
+        var doctorsFeePanel = $('#edit_doctors_fee');
         var totalCost = 0;
         $(prescriptionPanel).find('div.prescription_row').each(function() {
             var unitPrice = $(this).find('label.unit_price_value').text();
@@ -149,6 +145,7 @@ var renderCostValue = function(value) {
             var quantity = $(this).find('input.quantity_value').val();
             totalCost += (Number(unitPrice) * Number(quantity));
         });
+        totalCost += Number(doctorsFeePanel.val());
         $('#edit_cost').val(totalCost);
     });
     div.append(costTextField);
