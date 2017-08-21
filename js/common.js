@@ -193,7 +193,7 @@ var renderPrescriptionNameAndPriceMenu = function(selectedName, storedUnitPrice)
     var menu = $('<select>', { class: 'form-control',
                                style: 'margin-right: 10px; display: inline-block;',
                                id: 'prescriptionName' });
-    var priceNameLabel = $('<label>', { text: 'Unit price',
+    var priceNameLabel = $('<label>', { text: STRINGS.unit_price,
                                         style: 'display: inline-block; margin-right: 10px;'});
     var priceLabel = $('<label>', { style: 'display: inline-block; margin-right: 10px;',
                                     class: 'unit_price_value',
@@ -298,7 +298,7 @@ var renderTreatmentNameAndPriceMenu = function(selectedName, storedUnitPrice) {
     var menu = $('<select>', { class: 'form-control',
                                style: 'margin-right: 10px; display: inline-block;',
                                id: 'treatmentName' });
-    var priceNameLabel = $('<label>', { text: 'Unit price',
+    var priceNameLabel = $('<label>', { text: STRINGS.unit_price,
                                         style: 'display: inline-block; margin-right: 10px;'});
     var priceLabel = $('<label>', { style: 'display: inline-block; margin-right: 10px;',
                                     id: 'treatmentPriceLabel',
