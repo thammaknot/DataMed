@@ -5,10 +5,18 @@ var patientKeys = {
     'last_name': { 'display' : 'นามสกุล',
                    'type': 'short_text',
                    'size': 20 },
+    'gender' : { 'display' : 'เพศ',
+                 'type': 'options',
+                 'options': {
+                     'male': { 'display': 'ชาย' },
+                     'female': { 'display': 'หญิง' },
+                 } },
     'phone' : { 'display' : 'เบอร์โทรศัพท์',
                 'type': 'phone',
                 'size': 15,
                 'validate': 'phone' },
+    'id' : { 'display' : 'บัตรประชาชน',
+             'type' : 'number' },
     'dob' : { 'display' : 'วันเดือนปีเกิด',
               'type': 'dob',
               'validate': 'date'},
@@ -18,12 +26,10 @@ var patientKeys = {
                 'type': 'email',
                 'size': 20,
                 'validate': 'email' },
-    'gender' : { 'display' : 'เพศ',
-                 'type': 'options',
-                 'options': {
-                     'male': { 'display': 'ชาย' },
-                     'female': { 'display': 'หญิง' },
-                 } },
+    'underlying_diseases' : { 'display' : 'โรคประจำตัว',
+                              'type': 'text' },
+    'allergies' : { 'display' : 'แพ้ยา',
+                    'type' : 'text' },
 };
 
 var visitKeys = {
