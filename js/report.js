@@ -2,6 +2,7 @@ var renderReports = function(date) {
     var year = date.getYear() + 1900;
     var month = date.getMonth() + 1;
     var day = date.getDate();
+    print('Here: day = ' + day + ' month = ' + month + ' year = ' + year);
     firebase.database().ref('daily-reports/' + year + '/' + month + '/' + day + '/').orderByChild('time')
         .on('value', function(data) {
             var reportPanel = $('#reportPanel');
@@ -25,6 +26,12 @@ var renderReports = function(date) {
     var datePicker = $('<input>', { id: 'reportDateInput',
                                     class: 'form-control',
                                     value: day + '/' + month + '/' + year });
+    $.datepicker.setDefaults(
+        $.extend(
+            {'dateFormat':'dd-mm-yyyy'},
+            $.datepicker.regional['th']
+        )
+    );
     datePicker.datepicker({
         dateFormat: 'dd/mm/yy',
         changeYear: true,

@@ -12,6 +12,8 @@
 	}
 }( function( datepicker ) {
 
+var dateBefore = null;
+var valueAdjusted = false;
 datepicker.regional.th = {
 	closeText: "ปิด",
 	prevText: "&#xAB;&#xA0;ย้อน",
@@ -29,7 +31,43 @@ datepicker.regional.th = {
 	firstDay: 0,
 	isRTL: false,
 	showMonthAfterYear: false,
-	yearSuffix: "" };
+	yearSuffix: "",
+    beforeShow:function(){
+        if($(this).val()!=""){
+            var arrayDate=$(this).val().split("/");
+            arrayDate[2]=parseInt(arrayDate[2])-543;
+            $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
+        }
+        setTimeout(function(){
+            $.each($(".ui-datepicker-year option"),function(j,k){
+                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                $(".ui-datepicker-year option").eq(j).text(textYear);
+            });
+        },50);
+    },
+    onChangeMonthYear: function(){
+        setTimeout(function(){
+            $.each($(".ui-datepicker-year option"),function(j,k){
+                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                $(".ui-datepicker-year option").eq(j).text(textYear);
+            });
+        },50);
+    },
+    onClose:function(){
+        if($(this).val()!="" && $(this).val()==dateBefore){
+            var arrayDate=dateBefore.split("/");
+            arrayDate[2]=parseInt(arrayDate[2])+543;
+            $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
+        }
+    },
+    onSelect: function(dateText, inst){
+        dateBefore=$(this).val();
+        var arrayDate=dateText.split("/");
+        arrayDate[2]=parseInt(arrayDate[2]) + 543;
+        $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
+        $(this).change();
+    }
+};
 datepicker.setDefaults( datepicker.regional.th );
 
 return datepicker.regional.th;
