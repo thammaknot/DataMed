@@ -12,6 +12,7 @@
 	}
 }( function( datepicker ) {
 
+var BE_YEAR_OFFSET = 543;
 var dateBefore = null;
 var valueAdjusted = false;
 datepicker.regional.th = {
@@ -35,12 +36,12 @@ datepicker.regional.th = {
     beforeShow:function(){
         if($(this).val()!=""){
             var arrayDate=$(this).val().split("/");
-            arrayDate[2]=parseInt(arrayDate[2])-543;
+            arrayDate[2]=parseInt(arrayDate[2])-BE_YEAR_OFFSET;
             $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
         }
         setTimeout(function(){
             $.each($(".ui-datepicker-year option"),function(j,k){
-                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+BE_YEAR_OFFSET;
                 $(".ui-datepicker-year option").eq(j).text(textYear);
             });
         },50);
@@ -48,7 +49,7 @@ datepicker.regional.th = {
     onChangeMonthYear: function(){
         setTimeout(function(){
             $.each($(".ui-datepicker-year option"),function(j,k){
-                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+543;
+                var textYear=parseInt($(".ui-datepicker-year option").eq(j).val())+BE_YEAR_OFFSET;
                 $(".ui-datepicker-year option").eq(j).text(textYear);
             });
         },50);
@@ -56,14 +57,14 @@ datepicker.regional.th = {
     onClose:function(){
         if($(this).val()!="" && $(this).val()==dateBefore){
             var arrayDate=dateBefore.split("/");
-            arrayDate[2]=parseInt(arrayDate[2])+543;
+            arrayDate[2]=parseInt(arrayDate[2])+BE_YEAR_OFFSET;
             $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
         }
     },
     onSelect: function(dateText, inst){
         dateBefore=$(this).val();
         var arrayDate=dateText.split("/");
-        arrayDate[2]=parseInt(arrayDate[2]) + 543;
+        arrayDate[2]=parseInt(arrayDate[2]) + BE_YEAR_OFFSET;
         $(this).val(arrayDate[0]+"/"+arrayDate[1]+"/"+arrayDate[2]);
         $(this).change();
     }

@@ -1,5 +1,3 @@
-var BE_YEAR_OFFSET = 543;
-
 var print = function(s) {
     console.log(s);
 };
