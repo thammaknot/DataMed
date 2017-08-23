@@ -8,8 +8,8 @@ var patientKeys = {
     'gender' : { 'display' : 'เพศ',
                  'type': 'options',
                  'options': {
-                     'male': { 'display': 'ชาย' },
-                     'female': { 'display': 'หญิง' },
+                     'ชาย': { 'display': 'ชาย' },
+                     'หญิง': { 'display': 'หญิง' },
                  } },
     'phone' : { 'display' : 'เบอร์โทรศัพท์',
                 'type': 'phone',
