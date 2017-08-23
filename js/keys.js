@@ -1,4 +1,14 @@
 var patientKeys = {
+    'salutation': { 'display': 'คำนำหน้า',
+                    'type': 'options',
+                    'options': {
+                        'นาย' : { 'display': 'นาย' },
+                        'นาง' : { 'display': 'นาง' },
+                        'น.ส.' : { 'display': 'น.ส.' },
+                        'ด.ช.' : { 'display': 'ด.ช.' },
+                        'ด.ญ.' : { 'display': 'ด.ญ.' },
+                        'พระ' : { 'display': 'พระ' },
+                    }},
     'first_name': { 'display' : 'ชื่อ',
                     'type': 'short_text',
                     'size': 20 },

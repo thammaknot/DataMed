@@ -13,8 +13,7 @@ var renderTreatmentQueue = function() {
                 var visit = info.visit;
                 var div = $('<div>', { class: 'panel panel-success' });
                 var header = $('<div>', { class: 'panel-heading',
-                                          text: count + '. ' + patient.first_name
-                                          + ' ' + patient.last_name });
+                                          text: count + '. ' + renderPatientNameForHeader(patient) });
                 div.append(header);
                 var body = renderVisitSummary(visit);
                 var doneButton = $('<button>', { class: 'btn btn-success' });
@@ -90,8 +89,7 @@ var renderPaymentQueue = function() {
                 var visit = info.visit;
                 var div = $('<div>', { class: 'panel panel-primary' });
                 var header = $('<div>', { class: 'panel-heading',
-                                          text: count + '. ' + patient.first_name
-                                          + ' ' + patient.last_name });
+                                          text: count + '. ' + renderPatientNameForHeader(patient) });
                 div.append(header);
                 var body = renderVisitSummary(visit);
 

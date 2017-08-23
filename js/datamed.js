@@ -70,8 +70,7 @@ var renderQueue = function(clickable) {
                     }(key, info));
                 }
                 var header = $('<div>', { class: 'panel-heading',
-                                          text: count + '. ' + patient.first_name
-                                          + ' ' + patient.last_name });
+                                          text: count + '. ' + renderPatientNameForHeader(patient) });
                 div.append(header);
                 var bodyText = 'ไม่มีรายละเอียดอาการ';
                 if (visit) {

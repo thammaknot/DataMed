@@ -815,3 +815,7 @@ var renderProcedures = function(value, elementId) {
     outputDiv.append(textArea);
     return outputDiv;
 };
+
+var renderPatientNameForHeader = function(patient) {
+    return (patient.salutation ? patient.salutation + ' ' : '') + patient.first_name + ' ' + patient.last_name;
+};
