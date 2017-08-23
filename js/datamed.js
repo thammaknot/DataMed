@@ -125,6 +125,11 @@ var savePatientInfo = function(id) {
                 return;
             } else {
                 info[dataKey] = value;
+                if (dataKey == 'first_name') {
+                    info['first_name_for_search'] = value.toLowerCase();
+                } else if (dataKey == 'last_name') {
+                    info['last_name_for_search'] = value.toLowerCase();
+                }
             }
         }
     }
