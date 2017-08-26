@@ -16,7 +16,9 @@ var renderReports = function(date) {
                     var reportCard = renderReport(reports[key]);
                     reportPanel.append(reportCard);
                     ++numPatients;
-                    totalRevenue += Number(reports[key].visit.cost);
+                    if (reports[key].visit && reports[key].visit.cost) {
+                        totalRevenue += Number(reports[key].visit.cost);
+                    }
                 }
             }
             var summaryText = year + '/' + month + '/' + day + ' ';
