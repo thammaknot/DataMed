@@ -96,9 +96,10 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
         element = $('<select>', { id: elementId,
                                   class: 'form-control' });
         for (var option in fieldInfo.options) {
+            var optionValue = (typeof fieldInfo.options[option].value === 'undefined' ? option : fieldInfo.options[option].value);
             var optionElement = $('<option>')
                 .attr('value',
-                      option).text(fieldInfo.options[option].display);
+                      optionValue).text(fieldInfo.options[option].display);
             if (value == option) {
                 optionElement.prop('selected', true);
             }
@@ -110,6 +111,8 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
         element = renderImagePanel(value, elementId);
     } else if (type == 'procedures') {
         element = renderProcedures(value, elementId);
+    } else if (type == 'acupuncture_points') {
+        element = renderAcupuncturePoints(value, elementId);
     }
     wrapperDiv.append(element);
     return wrapperDiv;
@@ -818,4 +821,146 @@ var renderProcedures = function(value, elementId) {
 
 var renderPatientNameForHeader = function(patient) {
     return (patient.salutation ? patient.salutation + ' ' : '') + patient.first_name + ' ' + patient.last_name;
+};
+
+var acupuncturePointInfo = [];
+
+var setupAcupuncturePointCheckbox = function(checkbox) {
+    var value = checkbox.val();
+    if (acupuncturePointInfo.indexOf(value) > -1) {
+        checkbox.attr('checked', true);
+    }
+    checkbox.change(function() {
+        if ($(this).is(':checked')) {
+            acupuncturePointInfo.push($(this).val());
+        } else {
+            var index = acupuncturePointInfo.indexOf($(this).val());
+            if (index > -1) {
+                acupuncturePointInfo.splice(index, 1);
+            }
+        }
+    });
+};
+
+var renderAcupuncturePointTable = function(apList, regionKey) {
+    var table = $('<table>', { class: 'table-bordered' });
+    var points = apList[regionKey];
+    if (points) {
+        var header = $('<thead>');
+        var headerRow = $('<tr>');
+        var codeHeader = $('<td>').text(STRINGS.acupuncture_point_code_header);
+        var nameHeader = $('<td>').text(STRINGS.acupuncture_point_name_header);
+        var leftSelectionHeader = $('<td>').text(STRINGS.acupuncture_point_left_side_header);
+        var rightSelectionHeader = $('<td>').text(STRINGS.acupuncture_point_right_side_header);
+        headerRow.append(codeHeader, nameHeader, leftSelectionHeader, rightSelectionHeader);
+        header.append(headerRow);
+        table.append(header);
+        for (var i = 0; i < points.length; ++i) {
+            var point = points[i];
+            var row = $('<tr>');
+            var codeCell = $('<td>').text(point.code);
+            var nameCell = $('<td>').text(point.name);
+            row.append(codeCell, nameCell);
+            if (point.sidedness == 'true' || point.sidedness === true) {
+                var leftSelectionCell = $('<td>');
+                var leftCheckbox = $('<input>', { type: 'checkbox',
+                                                  id: 'checkbox_' + point.code + '_L',
+                                                  value: point.name + ':L'});
+                leftSelectionCell.append(leftCheckbox);
+                setupAcupuncturePointCheckbox(leftCheckbox);
+                var rightSelectionCell = $('<td>');
+                var rightCheckbox = $('<input>', { type: 'checkbox',
+                                                   id: 'checkbox_' + point.code + '_R',
+                                                   value: point.name + ':R' });
+                rightSelectionCell.append(rightCheckbox);
+                setupAcupuncturePointCheckbox(rightCheckbox);
+                row.append(leftSelectionCell, rightSelectionCell);
+            } else {
+                var selectionCell = $('<td>', { colspan: 2 });
+                var checkbox = $('<input>', { type: 'checkbox',
+                                              value: point.name });
+                selectionCell.append(checkbox);
+                row.append(selectionCell);
+                setupAcupuncturePointCheckbox(checkbox);
+            }
+            table.append(row);
+        }
+    }
+    return table;
+};
+
+var renderAcupuncturePointLabels = function(labelDiv) {
+    if (!labelDiv) {
+        labelDiv = $('#acupuncturePointLabels');
+    }
+    labelDiv.empty();
+    print(acupuncturePointInfo);
+    for (var i = 0; i < acupuncturePointInfo.length; ++i) {
+        var wrapper = $('<h4>');
+        var label = $('<label>', { class: 'label label-primary', style: 'margin: 0px 3px 5px 0px;' });
+        var value = acupuncturePointInfo[i];
+        var toks = value.split(':');
+        var labelText = value;
+        if (toks.length > 1) {
+            labelText = toks[0] + ' ' + (toks[1] == 'L' ? STRINGS.left : STRINGS.right);
+        }
+        label.text(labelText);
+        wrapper.append(label);
+        labelDiv.append(wrapper);
+        print('Adding...i=' + i);
+    }
+};
+
+var showAcupuncturePointPopup = function(labelDiv) {
+    var popup = $('<div>', { class: 'modal fade' });
+    var dialog = $('<div>', { class: 'modal-dialog' });
+    var content = $('<div>', { class: 'modal-content' });
+
+    var header = $('<div>', { class: 'modal-header' });
+    header.append(STRINGS.acupuncture_point_title);
+    var body = $('<div>', { class: 'modal-body', role: 'tablist', id: 'popupBody' });
+    var regions = acupuncturePointKeys.region.options;
+    var count = 0;
+    for (var key in regions) {
+        var regionName = regions[key].display;
+        var card = $('<div>', { class: 'panel' });
+        var cardHeader = $('<div>', { class: 'card-header', role: 'tab' });
+        var link = $('<a>', {href: '#collapse' + count, 'data-toggle': 'collapse', 'data-parent': '#popupBody'});
+        link.text(regionName);
+
+        var collapseBody = $('<div>', { id: 'collapse' + count, class: 'collapse', role: 'tabpanel'});
+        var pointTable = renderAcupuncturePointTable(acupuncturePointList, key);
+
+        card.append(cardHeader, collapseBody);
+        cardHeader.append(link);
+        collapseBody.append(pointTable);
+        body.append(card);
+        ++count;
+    }
+    dialog.append(content);
+    content.append(header, body);
+    popup.append(dialog);
+    popup.modal('show');
+
+    // On modal closed.
+    popup.on('hidden.bs.modal', function() {
+        print(acupuncturePointInfo);
+        renderAcupuncturePointLabels();
+        $(this).remove();
+    });
+};
+
+var renderAcupuncturePoints = function(value, elementId) {
+    var output = $('<div>', { id: elementId} );
+    var labelDiv = $('<div>', { id: 'acupuncturePointLabels' });
+    var editPointButton = $('<button>', { class: 'btn btn-danger' });
+    acupuncturePointInfo = value;
+    renderAcupuncturePointLabels(labelDiv);
+    editPointButton.append(getGlyph('pencil'));
+    editPointButton.append(' ' + STRINGS.edit_acupuncture_points);
+    editPointButton.click(function() {
+        showAcupuncturePointPopup();
+    });
+    output.append(labelDiv, editPointButton);
+    return output;
 };

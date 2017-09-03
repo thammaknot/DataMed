@@ -25,3 +25,7 @@
     background: #82d435;
     margin: 0px 0px 0px 5px;
 }
+
+.table td {
+   text-align: center;
+}

@@ -115,9 +115,9 @@ var showPaymentConfirmationDialog = function(queueKey, queueInfo, cost) {
     var div1 = $('<div>', { class: 'modal-dialog' });
     var div2 = $('<div>', { class: 'modal-content' });
     var header = $('<div>', { class: 'modal-header' });
-    var headerText = $('<h4>', { class: 'modal-title' }).text('Confirm Payment');
+    var headerText = $('<h4>', { class: 'modal-title' }).text(STRINGS.confirm_payment_title);
 
-    var alertText = STRINGS.have_you_received_payment1 + ' ' + cost + ' ' + STRINGS.currency + ' '
+    var alertText = STRINGS.have_you_received_payment1 + ' ' + (cost ? cost : 0) + ' ' + STRINGS.currency + ' '
         + STRINGS.have_you_received_payment2;
     var body = $('<div>', { class: 'modal-body' }).text(alertText);
     var footer = $('<div>', { class: 'modal-footer' });

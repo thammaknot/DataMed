@@ -1,6 +1,7 @@
 var prescriptionList = {};
 var treatmentList = {};
 var equipmentList = {};
+var acupuncturePointList = {};
 var currentVisit = null;
 
 var updateVisit = function(userId, visitId, queueKey) {
@@ -16,6 +17,10 @@ var updateVisit = function(userId, visitId, queueKey) {
         } else if (key == 'images') {
             if (imageInfo.length > 0) {
                 value = imageInfo;
+            }
+        } else if (key == 'acupuncture_points') {
+            if (acupuncturePointInfo.length > 0) {
+                value = acupuncturePointInfo;
             }
         } else {
             value = $('#edit_' + key).val();
@@ -148,6 +153,19 @@ var loadPrescriptionList = function() {
             var equipments = data.val();
             if (!equipments) { return; }
             equipmentList = equipments;
+        });
+    firebase.database().ref('acupuncture_points/')
+        .on('value', function(data) {
+            var ap = data.val();
+            if (!ap) { return; }
+            for (var key in ap) {
+                var region = ap[key].region;
+                if (!acupuncturePointList[region]) {
+                    acupuncturePointList[region] = [];
+                }
+                acupuncturePointList[region].push(ap[key]);
+            }
+            print(acupuncturePointList);
         });
 };
 

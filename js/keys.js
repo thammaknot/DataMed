@@ -70,6 +70,8 @@ var visitKeys = {
                     'type': 'equipments' },
     'treatments': { 'display': 'กายภาพบำบัด/ฝังเข็ม',
                  'type': 'treatments' },
+    'acupuncture_points': { 'display': 'จุดฝังเข็ม',
+                            'type': 'acupuncture_points'},
     'cost': { 'display': 'ค่ารักษา',
               'type': 'cost' },
     'next_visit': { 'display': 'นัดครั้งหน้า',
@@ -141,4 +143,29 @@ var procedureKeys = {
               'type' : 'short_text' },
     'text': { 'display' : 'ข้อความต้นฉบับ',
               'type' : 'text' },
+};
+
+var acupuncturePointKeys = {
+    'name' : { 'display': 'ชื่อจุด',
+               'type': 'short_text',
+               'size': 30},
+    'code' : { 'display': 'รหัส',
+               'type': 'short_text',
+               'size': 10},
+    'region' : { 'display': 'บริเวณของร่างกาย',
+                 'type': 'options',
+                 'options': {
+                     'ศีรษะและคอ' : { 'display': 'ศีรษะและคอ' },
+                     'ลำตัว' : { 'display': 'ลำตัว' },
+                     'แขน' : { 'display': 'แขน' },
+                     'ขา' : { 'display' : 'ขา' },
+                 }},
+    'sidedness' : { 'display': 'มีด้าน ซ้าย/ขวา',
+                    'type': 'options',
+                    'options' : {
+                        'มีด้านซ้าย/ขวา' : { display : 'มีด้านซ้าย/ขวา',
+                                         value: true},
+                        'ไม่มี' : { display: 'ไม่มี',
+                                  value: false}
+                    }}
 };
