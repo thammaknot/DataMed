@@ -17,6 +17,7 @@ var STRINGS = {
     add_treatment: 'เพิ่มกายภาพบำบัด/ฝังเข็ม',
     edit_acupuncture_points: 'แก้ไขจุดฝังเข็ม',
     add_image: 'เพิ่มรูปภาพ',
+    add_specific_acupuncture_point: 'เพิ่มจุดอาซือ',
     auto_cost: 'คำนวนค่ารักษา',
     pick_report_date: 'เลือกวันที่จะดูรายงาน',
     enter_first_and_last_names: 'โปรดกรอกชื่อและนามสกุลให้ครบ',
@@ -61,6 +62,8 @@ var STRINGS = {
     acupuncture_point_right_side_header: 'ขวา',
     left: 'ซ้าย',
     right: 'ขวา',
+    please_enter_specific_acupuncture_point_name: 'กรุณาใส่ชื่อจุด',
+    specific_acupuncture_point_prefix: 'อาซือ',
 
     invalid_bp: 'ค่าความดันโลหิตไม่ถูกต้อง',
     invalid_hr: 'ค่าชีพจรไม่ถูกต้อง',

@@ -894,7 +894,6 @@ var renderAcupuncturePointLabels = function(labelDiv) {
         labelDiv = $('#acupuncturePointLabels');
     }
     labelDiv.empty();
-    print(acupuncturePointInfo);
     for (var i = 0; i < acupuncturePointInfo.length; ++i) {
         var wrapper = $('<h4>');
         var label = $('<label>', { class: 'label label-primary', style: 'margin: 0px 3px 5px 0px;' });
@@ -907,8 +906,25 @@ var renderAcupuncturePointLabels = function(labelDiv) {
         label.text(labelText);
         wrapper.append(label);
         labelDiv.append(wrapper);
-        print('Adding...i=' + i);
     }
+};
+
+var renderSpecificAcupuncturePointLabel = function(name) {
+    var label = $('<label>', { class: 'label label-primary' }).text(name);
+    label.click(function() {
+        var labelText = label.text();
+        label.remove();
+        var index = acupuncturePointInfo.indexOf(labelText);
+        print(acupuncturePointInfo);
+        print('Label = ' + labelText);
+        print('Index = ' + index);
+        if (index > -1) {
+            acupuncturePointInfo.splice(index, 1);
+        }
+        print('After');
+        print(acupuncturePointInfo);
+    });
+    return label;
 };
 
 var showAcupuncturePointPopup = function(labelDiv) {
@@ -937,6 +953,36 @@ var showAcupuncturePointPopup = function(labelDiv) {
         body.append(card);
         ++count;
     }
+    var specificPointDiv = $('<div>');
+    var specificPointTextField = $('<input>', { id: 'specificPointTextField' });
+    var specificPointButton = $('<button>', { class: 'btn btn-primary' })
+        .text(STRINGS.add_specific_acupuncture_point);
+    var specificPointLabelDiv = $('<div>');
+
+    specificPointButton.click(function() {
+        var name = specificPointTextField.val();
+        specificPointTextField.val('');
+        if (!name.trim()) {
+            alert(STRINGS.please_enter_specific_acupuncture_point_name);
+            return;
+        }
+        name = STRINGS.specific_acupuncture_point_prefix + ' ' + name;
+        acupuncturePointInfo.push(name);
+        var label = renderSpecificAcupuncturePointLabel(name);
+        specificPointLabelDiv.append(label);
+    });
+
+    for (var i = 0; i < acupuncturePointInfo.length; ++i) {
+        var point = acupuncturePointInfo[i];
+        if (point.startsWith(STRINGS.specific_acupuncture_point_prefix)) {
+            var label = renderSpecificAcupuncturePointLabel(point);
+            specificPointLabelDiv.append(label);
+        }
+    }
+
+    specificPointDiv.append(specificPointTextField, specificPointButton, specificPointLabelDiv);
+    body.append(specificPointDiv);
+
     dialog.append(content);
     content.append(header, body);
     popup.append(dialog);
@@ -954,8 +1000,8 @@ var renderAcupuncturePoints = function(value, elementId) {
     var output = $('<div>', { id: elementId} );
     var labelDiv = $('<div>', { id: 'acupuncturePointLabels' });
     var editPointButton = $('<button>', { class: 'btn btn-danger' });
-    acupuncturePointInfo = value;
     if (value) {
+        acupuncturePointInfo = value;
         renderAcupuncturePointLabels(labelDiv);
     }
     editPointButton.append(getGlyph('pencil'));
