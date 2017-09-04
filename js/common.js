@@ -915,14 +915,9 @@ var renderSpecificAcupuncturePointLabel = function(name) {
         var labelText = label.text();
         label.remove();
         var index = acupuncturePointInfo.indexOf(labelText);
-        print(acupuncturePointInfo);
-        print('Label = ' + labelText);
-        print('Index = ' + index);
         if (index > -1) {
             acupuncturePointInfo.splice(index, 1);
         }
-        print('After');
-        print(acupuncturePointInfo);
     });
     return label;
 };
@@ -990,7 +985,6 @@ var showAcupuncturePointPopup = function(labelDiv) {
 
     // On modal closed.
     popup.on('hidden.bs.modal', function() {
-        print(acupuncturePointInfo);
         renderAcupuncturePointLabels();
         $(this).remove();
     });
