@@ -955,7 +955,9 @@ var renderAcupuncturePoints = function(value, elementId) {
     var labelDiv = $('<div>', { id: 'acupuncturePointLabels' });
     var editPointButton = $('<button>', { class: 'btn btn-danger' });
     acupuncturePointInfo = value;
-    renderAcupuncturePointLabels(labelDiv);
+    if (value) {
+        renderAcupuncturePointLabels(labelDiv);
+    }
     editPointButton.append(getGlyph('pencil'));
     editPointButton.append(' ' + STRINGS.edit_acupuncture_points);
     editPointButton.click(function() {
