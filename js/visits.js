@@ -24,6 +24,8 @@ var updateVisit = function(userId, visitId, queueKey) {
             }
         } else {
             value = $('#edit_' + key).val();
+            print('Saving ' + key);
+            print(value);
         }
 
         if (value) {

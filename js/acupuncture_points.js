@@ -66,6 +66,9 @@ var saveAcupuncturePoints = function() {
         for (var key in acupuncturePointKeys) {
             var value = $(this).find('#edit_' + key).val();
             if (value) {
+                if (value === 'true' || value === 'false') {
+                    value = (value == 'true');
+                }
                 info[key] = value;
             }
         }

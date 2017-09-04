@@ -100,7 +100,7 @@ var renderFieldValue = function(fieldKey, fieldInfo, value) {
             var optionElement = $('<option>')
                 .attr('value',
                       optionValue).text(fieldInfo.options[option].display);
-            if (value == option) {
+            if (value == optionValue) {
                 optionElement.prop('selected', true);
             }
             element.append(optionElement);
