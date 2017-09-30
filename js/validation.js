@@ -23,7 +23,7 @@ var validateVisitData = function(key, value) {
         testPattern = '^[0-9]*$';
         message = STRINGS.invalid_cost;
     } else if (key == 'next_visit') {
-        testPattern = '^[0-9][1-9]/[0-9][1-9]/[1-9][0-9]{3,3}$';
+        testPattern = '^[0-9][0-9]/[0-9][0-9]/[1-9][0-9]{3,3}$';
         message = STRINGS.invalid_next_visit;
     }
     var regExp = new RegExp(testPattern);
