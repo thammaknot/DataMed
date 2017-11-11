@@ -856,8 +856,6 @@ var renderAcupuncturePointTable = function(apList, regionKey) {
         headerRow.append(codeHeader, nameHeader, leftSelectionHeader, rightSelectionHeader);
         header.append(headerRow);
         table.append(header);
-        print('Rendering table>>>>>');
-        print(acupuncturePointInfo);
         for (var i = 0; i < points.length; ++i) {
             var point = points[i];
             var row = $('<tr>');
