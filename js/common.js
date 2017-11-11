@@ -823,6 +823,7 @@ var renderPatientNameForHeader = function(patient) {
     return (patient.salutation ? patient.salutation + ' ' : '') + patient.first_name + ' ' + patient.last_name;
 };
 
+// List of selected acupuncture points for current patient.
 var acupuncturePointInfo = [];
 
 var setupAcupuncturePointCheckbox = function(checkbox) {
@@ -855,6 +856,8 @@ var renderAcupuncturePointTable = function(apList, regionKey) {
         headerRow.append(codeHeader, nameHeader, leftSelectionHeader, rightSelectionHeader);
         header.append(headerRow);
         table.append(header);
+        print('Rendering table>>>>>');
+        print(acupuncturePointInfo);
         for (var i = 0; i < points.length; ++i) {
             var point = points[i];
             var row = $('<tr>');
@@ -997,6 +1000,8 @@ var renderAcupuncturePoints = function(value, elementId) {
     if (value) {
         acupuncturePointInfo = value;
         renderAcupuncturePointLabels(labelDiv);
+    } else {
+        acupuncturePointInfo = [];
     }
     editPointButton.append(getGlyph('pencil'));
     editPointButton.append(' ' + STRINGS.edit_acupuncture_points);
